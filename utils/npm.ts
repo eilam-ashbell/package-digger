@@ -1,9 +1,12 @@
 import AllPackagesModel from "@/models/npm/all-packages-model";
+import DistTagsModel from "@/models/npm/dist-tags-model";
+import LatestVersionModel from "@/models/npm/latest-version-model";
 import PackageDownloadModel from "@/models/npm/package-download-model";
 import PackageInfoModel from "@/models/npm/package-info-model";
 import { PackageName } from "@/models/npm/package-name-model";
 import PackageTimeModel from "@/models/npm/package-time-model";
 import PackageVersionsDownloadsModel from "@/models/npm/package-versions-downloads-model";
+import SearchPackageResultsModel from "@/models/npm/search-package-results-model";
 import VersionModel from "@/models/npm/version-model";
 import axios from "axios";
 
@@ -55,14 +58,22 @@ async function getPackageVersions(
 }
 
 async function getPackageLatestVersion(
-    packageInfo: PackageInfoModel | string
+    packageName: string
 ): Promise<string> {
-    if (typeof packageInfo === "string") {
-        packageInfo = await getPackageInfo(packageInfo);
-    }
-    const latest = packageInfo["dist-tags"].latest;
+    const {data} = await axios.get<LatestVersionModel>(`https://registry.npmjs.org/${packageName}/latest`)
+    const latest = data.version;
     return latest;
 }
+
+// async function getPackageLatestVersion(
+//     packageInfo: PackageInfoModel | string
+// ): Promise<string> {
+//     if (typeof packageInfo === "string") {
+//         packageInfo = await getPackageInfo(packageInfo);
+//     }
+//     const latest = packageInfo["dist-tags"].latest;
+//     return latest;
+// }
 
 async function getPackageDownloadLink(
     versionInfo: VersionModel | PackageName
@@ -115,7 +126,11 @@ async function getPackageRangeDownloads(
         | `${number}${number}${number}${number}-${number}${number}-${number}${number}:${number}${number}${number}${number}-${number}${number}-${number}${number}`
 ): Promise<PackageDownloadModel> {
     const { data } = await axios.get<PackageDownloadModel>(
-        `https://api.npmjs.org/downloads/range/${timeRange}/${packageName}`
+        `https://api.npmjs.org/downloads/range/${timeRange}/${packageName}`, {
+            headers: {
+                'Cache-Control': 'no-cache'
+            }
+        }
     );
     return data;
 }
@@ -128,6 +143,12 @@ async function getPackagePointDownloads(
         `https://api.npmjs.org/downloads/point/${timeRange}/${packageName}`
     );
     return data;
+}
+
+async function searchPackageName(packageName: string): Promise<SearchPackageResultsModel[]> {
+    const { data } = await axios.get<{"objects": SearchPackageResultsModel[]}>(`https://registry.npmjs.org/-/v1/search?text=${packageName}`)
+    const packages = data.objects
+    return packages;
 }
 
 export default {
@@ -143,4 +164,5 @@ export default {
     getPackageVersionsDownloads,
     getPackageRangeDownloads,
     getPackagePointDownloads,
+    searchPackageName,
 };
