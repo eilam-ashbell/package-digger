@@ -145,8 +145,8 @@ async function getPackagePointDownloads(
     return data;
 }
 
-async function searchPackageName(packageName: string): Promise<SearchPackageResultsModel[]> {
-    const { data } = await axios.get<{"objects": SearchPackageResultsModel[]}>(`https://registry.npmjs.org/-/v1/search?text=${packageName}`)
+async function searchPackageName(packageName: string, size: number): Promise<SearchPackageResultsModel[]> {
+    const { data } = await axios.get<{"objects": SearchPackageResultsModel[]}>(`https://registry.npmjs.org/-/v1/search`, { params: { text: packageName, size: size } })
     const packages = data.objects
     return packages;
 }

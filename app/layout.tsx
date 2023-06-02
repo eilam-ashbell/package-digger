@@ -16,8 +16,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <div>
+      <body className={`${inter.className} bg-gray-100`}>
+        <div className='px-8 py-4 flex bg-white border-b border-gray-300'>
             <SearchPackage />
         </div>
         {children}</body>
