@@ -30,7 +30,8 @@ async function getPackageInfo(
 ): Promise<PackageInfoModel> {
     const reqConfig = {
         headers: {
-            Accept: "application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*",
+            Accept: 'application/vnd.npm.install-v1+json'
+            // Accept: "application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*",
         },
     };
     const { data } = await axios.get<PackageInfoModel>(
@@ -55,6 +56,13 @@ async function getPackageVersions(
     }
     const versions = Object.keys(packageInfo.versions);
     return versions;
+}
+
+async function getPackageLatestVersionInfo(
+    packageName: string
+): Promise<LatestVersionModel> {
+    const {data} = await axios.get<LatestVersionModel>(`https://registry.npmjs.org/${packageName}/latest`)
+    return data;
 }
 
 async function getPackageLatestVersion(
@@ -157,6 +165,7 @@ export default {
     getPackageInfo,
     getVersionInfo,
     getPackageVersions,
+    getPackageLatestVersionInfo,
     getPackageLatestVersion,
     getPackageDownloadLink,
     getPackageDependencies,
