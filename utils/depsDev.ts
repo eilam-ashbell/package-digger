@@ -3,6 +3,7 @@ import DepsDevAdvisoryModel from "@/models/deps.dev/deps-dev-advisory-model";
 import DepsDevDependenciesModel from "@/models/deps.dev/deps-dev-dependencies-model";
 import DepsDevPackageModel from "@/models/deps.dev/deps-dev-package-model";
 import DepsDevProjectModel from "@/models/deps.dev/deps-dev-project-model";
+import DepsDevQueryModel from "@/models/deps.dev/deps-dev-query-model";
 import DepsDevVersionInfoModel from "@/models/deps.dev/deps-dev-version-info-model";
 import axios from "axios";
 
@@ -56,14 +57,14 @@ async function getAdvisory(
 
 async function getQuery(
     queryParams: {
-        hashType?: string;
-        hashValue?: string;
-        packageSystem?: IDepsDevSystem;
-        packageName?: string;
-        packageVersion?: string;
+        'hash.type'?: string;
+        'hash.value'?: string;
+        'versionKey.system'?: IDepsDevSystem;
+        'versionKey.name'?: string;
+        'versionKey.version'?: string;
     }
-): Promise<DepsDevAdvisoryModel> {
-    const { data } = await axios.get<DepsDevAdvisoryModel>(
+): Promise<DepsDevQueryModel> {
+    const { data } = await axios.get<DepsDevQueryModel>(
         `https://api.deps.dev/v3alpha/query`, {
             params: queryParams
         }
