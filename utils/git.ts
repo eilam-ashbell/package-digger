@@ -3,16 +3,22 @@ import UserModel from "@/models/git/user-model";
 import axios from "axios";
 import { env } from "process";
 
+const git = axios.create({
+    baseURL: 'https://api.github.com/',
+    headers: {
+        'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`
+    }
+})
 async function getRepo(owner: string, repo: string): Promise<RepoModel> {
-    const { data } = await axios.get<RepoModel>(
-        `https://api.github.com/repos/${owner}/${repo}`
+    const { data } = await git.get<RepoModel>(
+        `repos/${owner}/${repo}`
     );
     return data;
 }
 
 async function getUser(username: string) {
-    const { data } = await axios.get<UserModel>(
-        `https://api.github.com/users/${username}`
+    const { data } = await git.get<UserModel>(
+        `users/${username}`
     );
     return data;
 }

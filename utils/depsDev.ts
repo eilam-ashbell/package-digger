@@ -7,12 +7,16 @@ import DepsDevQueryModel from "@/models/deps.dev/deps-dev-query-model";
 import DepsDevVersionInfoModel from "@/models/deps.dev/deps-dev-version-info-model";
 import axios from "axios";
 
+const depsDev = axios.create({
+    baseURL: 'https://api.deps.dev/v3alpha/'
+})
+
 async function getPackage(
     packageName: string,
     packageSystem: IDepsDevSystem
 ): Promise<DepsDevPackageModel> {
-    const { data } = await axios.get<DepsDevPackageModel>(
-        `https://api.deps.dev/v3alpha/systems/${packageSystem}/packages/${packageName}`
+    const { data } = await depsDev.get<DepsDevPackageModel>(
+        `systems/${packageSystem}/packages/${packageName}`
     );
     return data;
 }
@@ -22,8 +26,8 @@ async function getVersion(
     packageSystem: IDepsDevSystem,
     packageVersion: string
 ): Promise<DepsDevVersionInfoModel> {
-    const { data } = await axios.get<DepsDevVersionInfoModel>(
-        `https://api.deps.dev/v3alpha/systems/${packageSystem}/packages/${packageName}/versions/${packageVersion}`
+    const { data } = await depsDev.get<DepsDevVersionInfoModel>(
+        `systems/${packageSystem}/packages/${packageName}/versions/${packageVersion}`
     );
     return data;
 }
@@ -33,15 +37,15 @@ async function getDependencies(
     packageSystem: IDepsDevSystem,
     packageVersion: string
 ): Promise<DepsDevDependenciesModel> {
-    const { data } = await axios.get<DepsDevDependenciesModel>(
-        `https://api.deps.dev/v3alpha/systems/${packageSystem}/packages/${packageName}/versions/${packageVersion}:dependencies`
+    const { data } = await depsDev.get<DepsDevDependenciesModel>(
+        `systems/${packageSystem}/packages/${packageName}/versions/${packageVersion}:dependencies`
     );
     return data;
 }
 
 async function getProject(projectKeyId: string): Promise<DepsDevProjectModel> {
-    const { data } = await axios.get<DepsDevProjectModel>(
-        `https://api.deps.dev/v3alpha/projects/${projectKeyId}`
+    const { data } = await depsDev.get<DepsDevProjectModel>(
+        `projects/${projectKeyId}`
     );
     return data;
 }
@@ -49,8 +53,8 @@ async function getProject(projectKeyId: string): Promise<DepsDevProjectModel> {
 async function getAdvisory(
     advisoryKeyId: string
 ): Promise<DepsDevAdvisoryModel> {
-    const { data } = await axios.get<DepsDevAdvisoryModel>(
-        `https://api.deps.dev/v3alpha/advisories/${advisoryKeyId}`
+    const { data } = await depsDev.get<DepsDevAdvisoryModel>(
+        `advisories/${advisoryKeyId}`
     );
     return data;
 }
@@ -64,8 +68,8 @@ async function getQuery(
         'versionKey.version'?: string;
     }
 ): Promise<DepsDevQueryModel> {
-    const { data } = await axios.get<DepsDevQueryModel>(
-        `https://api.deps.dev/v3alpha/query`, {
+    const { data } = await depsDev.get<DepsDevQueryModel>(
+        `query`, {
             params: queryParams
         }
     );

@@ -34,7 +34,6 @@ async function getPackageInfo(
     const reqConfig = {
         headers: {
             Accept: 'application/vnd.npm.install-v1+json'
-            // Accept: "application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*",
         },
     };
     const { data } = await axios.get<PackageInfoModel>(
@@ -75,16 +74,6 @@ async function getPackageLatestVersion(
     const latest = data.version;
     return latest;
 }
-
-// async function getPackageLatestVersion(
-//     packageInfo: PackageInfoModel | string
-// ): Promise<string> {
-//     if (typeof packageInfo === "string") {
-//         packageInfo = await getPackageInfo(packageInfo);
-//     }
-//     const latest = packageInfo["dist-tags"].latest;
-//     return latest;
-// }
 
 async function getPackageDownloadLink(
     versionInfo: VersionModel | PackageName
