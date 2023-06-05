@@ -7,13 +7,13 @@ interface IDownloadsData {
 
 export default function DownloadsCard(downloads: IDownloadsData) {
     return (
-        <Card>
+        <>
             <div className='flex flex-row justify-between'>
-                <Title>Downloads</Title>
+                <Title>Popularity</Title>
                 <Title>{new Intl.NumberFormat().format(downloads.downloads.reduce((sum, current) =>
 
                     sum + current.downloads, 0
-                ))} in last week</Title>
+                ))} last week</Title>
             </div>
             <AreaChart
                 className="mt-6"
@@ -24,6 +24,6 @@ export default function DownloadsCard(downloads: IDownloadsData) {
                 yAxisWidth={60}
                 curveType='natural'
             />
-        </Card>
+        </>
     )
 }

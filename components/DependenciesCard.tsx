@@ -1,6 +1,7 @@
 'use client'
 import * as React from 'react';
 import { AreaChart, Card, LineChart, Subtitle, Tab, TabList, Text, Title } from '@tremor/react';
+import npm from '@/utils/npm';
 
 interface Deps {
     direct?: Record<string, string>
@@ -11,7 +12,7 @@ export default function DependenciesCard(deps: Deps) {
     const [value, setValue] = React.useState("1");
 
     return (
-        <Card>
+        <>
             <TabList value={value} onValueChange={(value) => setValue(value)} >
                 <Tab value="1" text={`Direct (${deps.direct && Object.entries(deps.direct).length || 0})`} />
                 <Tab value="2" text={`Dev (${deps.dev && Object.entries(deps.dev).length || 0})`} />
@@ -31,6 +32,6 @@ export default function DependenciesCard(deps: Deps) {
                     {Object.entries(deps.indirect).map(d => <div className='flex justify-between'><div>{d[0]}</div><div>{d[1]}</div></div>)}
                 </div>
             }
-        </Card>
+        </>
     )
 }

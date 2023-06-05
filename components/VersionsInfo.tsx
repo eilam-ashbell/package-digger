@@ -12,34 +12,34 @@ interface IVersionsInfo {
 }
 export default function VersionsInfo(vInfo: IVersionsInfo) {
     return (
-        <Card className='w-1/3 flex flex-col gap-y-2'>
+        <>
             <VersionSelect versions={vInfo.versions} current={vInfo.current} />
-            <div className='flex flex-col gap-y-1'>
-                <Text>
+            <div className='flex flex-col gap-y-2 divide-y' >
+                <Text className='flex flex row justify-between pt-2'>
                     <Bold className='text-slate-400'>
                         {`Current: `}
                     </Bold>
                     {vInfo.current}
                 </Text>
-                <Text>
+                <Text className='flex flex row justify-between  pt-2'>
                     <Bold className='text-slate-400'>
                         {`Versions count: `}
                     </Bold>
                     {vInfo.count}
                 </Text>
-                <Text>
+                <Text className='flex flex row justify-between pt-2'>
                     <Bold className='text-slate-400'>
                         {`Last publish: `}
                     </Bold>
                     {vInfo.lastPublish}
                 </Text>
-                <Text>
+                <Text className='flex flex row justify-between pt-2'>
                     <Bold className='text-slate-400'>
                         {`Last modified: `}
                     </Bold>
                     {vInfo.lastModified}
                 </Text>
             </div>
-        </Card>
+        </>
     )
 }
