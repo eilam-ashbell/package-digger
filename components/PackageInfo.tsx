@@ -21,7 +21,7 @@ export default function PackageInfo(info: IPackageInfo) {
                 {info.description}
             </Subtitle>
             <div className='flex flex-wrap gap-x-0.5 gap-y-1'>
-                {info.keywords.map(k => <Badge size='lg' color='blue' className='opacity-75'>{k}</Badge>)}
+                {info.keywords?.map(k => <Badge size='lg' color='blue' className='opacity-75'>{k}</Badge>)}
             </div>
         </>
     )

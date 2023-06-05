@@ -1,7 +1,7 @@
 import RepoModel from "@/models/git/repo-model";
 import UserModel from "@/models/git/user-model";
 import axios from "axios";
-
+import { env } from "process";
 
 async function getRepo(owner: string, repo: string): Promise<RepoModel> {
     const { data } = await axios.get<RepoModel>(
@@ -20,4 +20,4 @@ async function getUser(username: string) {
 export default {
     getRepo,
     getUser,
-}
+};

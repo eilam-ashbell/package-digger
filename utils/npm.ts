@@ -9,6 +9,9 @@ import PackageVersionsDownloadsModel from "@/models/npm/package-versions-downloa
 import SearchPackageResultsModel from "@/models/npm/search-package-results-model";
 import VersionModel from "@/models/npm/version-model";
 import axios from "axios";
+import depsDev from "./depsDev";
+import UnitedDepsModel from "@/models/npm/united-deps-model";
+import { ITimeRange } from "@/models/npm/ITimeRange";
 
 async function getAllPackages(): Promise<Omit<AllPackagesModel, "doc">> {
     const { data } = await axios.get<Omit<AllPackagesModel, "doc">>(
@@ -106,6 +109,19 @@ async function getPackageDependencies(
     return deps;
 }
 
+async function getUnitedDeps(packageInfo: PackageName): Promise<UnitedDepsModel> {
+    const depsFromNpm = await getVersionInfo(packageInfo)
+    const depsFromDepsDev = await depsDev.getDependencies(packageInfo.name, 'NPM', packageInfo.version)
+    const unitedDeps = new UnitedDepsModel;
+    unitedDeps.direct = depsFromNpm.dependencies;
+    unitedDeps.dev = depsFromNpm.devDependencies;
+    const indirect = depsFromDepsDev.nodes.filter(d => d.relation === 'INDIRECT')
+    for (let d of indirect) {
+        unitedDeps.indirect[d.versionKey.name] = d.versionKey.version;
+    }
+    return unitedDeps;
+}
+
 async function getPackageTimes(
     packageInfo: PackageInfoModel | string
 ): Promise<PackageTimeModel> {
@@ -127,17 +143,13 @@ async function getPackageVersionsDownloads(
 
 async function getPackageRangeDownloads(
     packageName: string,
-    timeRange:
-        | "last-day"
-        | "last-week"
-        | "last-month"
-        | `${number}${number}${number}${number}-${number}${number}-${number}${number}:${number}${number}${number}${number}-${number}${number}-${number}${number}`
+    timeRange: ITimeRange
 ): Promise<PackageDownloadModel> {
     const { data } = await axios.get<PackageDownloadModel>(
         `https://api.npmjs.org/downloads/range/${timeRange}/${packageName}`, {
             headers: {
-                'Cache-Control': 'no-cache'
-            }
+                'Cache-Control': 'no-cache',
+            },
         }
     );
     return data;
@@ -174,4 +186,5 @@ export default {
     getPackageRangeDownloads,
     getPackagePointDownloads,
     searchPackageName,
+    getUnitedDeps,
 };
