@@ -8,18 +8,23 @@ import DownloadsCard from '@/components/DownloadsCard';
 import DistCard from '@/components/DistCard';
 import depsDev from '@/utils/depsDev';
 import git from '@/utils/git';
+import LanguageData from '@/components/LanguageData';
 
 export default async function page({ params }) {
     const pkgName = params.packageName;
     const latestVersion = await npm.getPackageLatestVersion(pkgName)
-    const versionInfo = await npm.getVersionInfo({name: pkgName, version: latestVersion})
-    const deps = await npm.getUnitedDeps({name: pkgName, version: latestVersion})
+    const versionInfo = await npm.getVersionInfo({ name: pkgName, version: latestVersion })
+    const deps = await npm.getUnitedDeps({ name: pkgName, version: latestVersion })
     const downloads = await npm.getPackageRangeDownloads(pkgName, "last-month")
+    // github API
     let repoParams;
     if (versionInfo.repository.type === 'git') {
         repoParams = versionInfo.repository.url.replace('git+https://github.com/', '').replace('.git', '').split('/');
     }
-        const  repoInfo = await git.getRepo(repoParams[0], repoParams[1])    
+    const repoInfo = await git.getRepo(repoParams[0], repoParams[1])
+    const languages = await git.getLanguages(repoParams[0], repoParams[1])
+    console.log(languages);
+    
     const packageInfo = await npm.getPackageInfo(pkgName, false)
     const versions = await npm.getPackageVersions(pkgName)
     const lastPublish = Object.entries(packageInfo?.time).pop()
@@ -47,6 +52,7 @@ export default async function page({ params }) {
                 <Badge>OPEN ISSUES: {repoInfo?.open_issues_count}</Badge>
                 <Badge>SUBSCRIBERS: {repoInfo?.subscribers_count}</Badge>
                 <Badge>NETWORK: {repoInfo?.network_count}</Badge>
+                <LanguageData languages={languages}/>
             </Card>
             <Card className=''>
                 <DependenciesCard {...deps} />

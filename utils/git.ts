@@ -4,26 +4,28 @@ import axios from "axios";
 import { env } from "process";
 
 const git = axios.create({
-    baseURL: 'https://api.github.com/',
+    baseURL: "https://api.github.com/",
     headers: {
-        'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`
-    }
-})
+        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+    },
+});
 async function getRepo(owner: string, repo: string): Promise<RepoModel> {
-    const { data } = await git.get<RepoModel>(
-        `repos/${owner}/${repo}`
-    );
+    const { data } = await git.get<RepoModel>(`repos/${owner}/${repo}`);
     return data;
 }
 
 async function getUser(username: string) {
-    const { data } = await git.get<UserModel>(
-        `users/${username}`
-    );
+    const { data } = await git.get<UserModel>(`users/${username}`);
+    return data;
+}
+
+async function getLanguages(owner: string, repo: string) {
+    const { data } = await git.get<Record<string, number>>(`repos/${owner}/${repo}/languages`)
     return data;
 }
 
 export default {
     getRepo,
     getUser,
+    getLanguages,
 };
