@@ -54,10 +54,28 @@ async function getAdvisory(
     return data;
 }
 
+async function getQuery(
+    queryParams: {
+        hashType?: string;
+        hashValue?: string;
+        packageSystem?: IDepsDevSystem;
+        packageName?: string;
+        packageVersion?: string;
+    }
+): Promise<DepsDevAdvisoryModel> {
+    const { data } = await axios.get<DepsDevAdvisoryModel>(
+        `https://api.deps.dev/v3alpha/query`, {
+            params: queryParams
+        }
+    );
+    return data;
+}
+
 export default {
     getAdvisory,
     getDependencies,
     getPackage,
     getProject,
     getVersion,
+    getQuery,
 };
