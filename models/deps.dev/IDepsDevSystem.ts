@@ -1,0 +1,1 @@
+export type IDepsDevSystem = "GO" | "NPM" | "CARGO" | "MAVEN" | "PYPI" | "NUGET"
