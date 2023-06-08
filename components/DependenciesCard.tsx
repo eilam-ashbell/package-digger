@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { AreaChart, Button, Card, LineChart, Subtitle, Tab, TabList, Text, Title } from '@tremor/react';
 import npm from '@/utils/npm';
-import UnitedDepsModel from '@/models/npm/united-deps-model';
+import UnitedDepsModel from '@/models/united/deps-model';
 import { DownloadIcon } from '@heroicons/react/solid'
 import DependencyListItem from './DependencyListItem';
 

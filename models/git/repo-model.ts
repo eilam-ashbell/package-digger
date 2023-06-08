@@ -48,9 +48,9 @@ export default class RepoModel {
     "labels_url": string;
     "releases_url": string;
     "deployments_url": string;
-    "created_at": DateConstructor;
-    "updated_at": DateConstructor;
-    "pushed_at": DateConstructor;
+    "created_at": string;
+    "updated_at": string;
+    "pushed_at": string;
     "git_url": string;
     "ssh_url": string;
     "clone_url": string;

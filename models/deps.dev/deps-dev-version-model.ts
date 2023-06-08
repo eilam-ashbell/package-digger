@@ -4,7 +4,7 @@ import DepsDevVersionKeyModel from "./deps-dev-version-key-model";
 export default class DepsDevVersionModel {
     "versionKey": DepsDevVersionKeyModel;
     "isDefault": boolean;
-    "publishedAt": DateConstructor;
+    "publishedAt": string;
     "licenses": string[];
     "advisoryKeys": string[];
     "links": DepsDevLinkModel[];

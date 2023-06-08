@@ -1,4 +1,4 @@
-export default class UnitedDepsModel {
+export default class DepsModel {
     direct: Record<string, string>
     indirect: Record<string, string>
     dev: Record<string, string>

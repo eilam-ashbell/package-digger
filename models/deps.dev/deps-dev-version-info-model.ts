@@ -7,5 +7,5 @@ export default class DepsDevVersionInfoModel {
     "licenses": string[];
     "advisoryKeys": string[];
     "links": DepsDevLinkModel[];
-    "publishedAt": DateConstructor;
+    "publishedAt": string;
 }

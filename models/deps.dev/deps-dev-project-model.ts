@@ -22,6 +22,6 @@ export default class DepsDevProjectModel {
         checks: DepsDevScorecardCheckModel[];
         overallScore: number;
         metadata: [];
-        date: DateConstructor;
+        date: string;
     };
 }

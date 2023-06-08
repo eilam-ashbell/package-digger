@@ -6,10 +6,11 @@ import DepsDevProjectModel from "@/models/deps.dev/deps-dev-project-model";
 import DepsDevQueryModel from "@/models/deps.dev/deps-dev-query-model";
 import DepsDevVersionInfoModel from "@/models/deps.dev/deps-dev-version-info-model";
 import axios from "axios";
+import convert from "./convert";
 
 const depsDev = axios.create({
-    baseURL: 'https://api.deps.dev/v3alpha/'
-})
+    baseURL: "https://api.deps.dev/v3alpha/",
+});
 
 async function getPackage(
     packageName: string,
@@ -43,9 +44,10 @@ async function getDependencies(
     return data;
 }
 
-async function getProject(projectKeyId: string): Promise<DepsDevProjectModel> {
+async function getProject(repoUrl: string): Promise<DepsDevProjectModel> {
+    const [owner, repo] = convert.gitUrlToRepoParams(repoUrl);
     const { data } = await depsDev.get<DepsDevProjectModel>(
-        `projects/${projectKeyId}`
+        `projects/github.com%2F${owner}%2F${repo}`
     );
     return data;
 }
@@ -59,20 +61,16 @@ async function getAdvisory(
     return data;
 }
 
-async function getQuery(
-    queryParams: {
-        'hash.type'?: string;
-        'hash.value'?: string;
-        'versionKey.system'?: IDepsDevSystem;
-        'versionKey.name'?: string;
-        'versionKey.version'?: string;
-    }
-): Promise<DepsDevQueryModel> {
-    const { data } = await depsDev.get<DepsDevQueryModel>(
-        `query`, {
-            params: queryParams
-        }
-    );
+async function getQuery(queryParams: {
+    "hash.type"?: string;
+    "hash.value"?: string;
+    "versionKey.system"?: IDepsDevSystem;
+    "versionKey.name"?: string;
+    "versionKey.version"?: string;
+}): Promise<DepsDevQueryModel> {
+    const { data } = await depsDev.get<DepsDevQueryModel>(`query`, {
+        params: queryParams,
+    });
     return data;
 }
 

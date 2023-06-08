@@ -1,22 +1,25 @@
-import { Card, Title, AreaChart } from '@tremor/react';
+import AdoptionModel from '@/models/united/adoption-model';
+import { Card, Title, AreaChart, Badge, Button } from '@tremor/react';
 import * as React from 'react';
+import convert from '@/utils/convert';
 
-interface IDownloadsData {
-    downloads: { downloads: number, day: string }[]
-}
-
-export default function DownloadsCard(downloads: IDownloadsData) {
+export default function DownloadsCard(data: AdoptionModel) {
+    const { stars, forks, watchers, network, subscribers, openIssues, downloads } = data
     return (
         <>
             <div className='flex flex-row justify-between'>
-                <Title>Popularity</Title>
-                <Title>{new Intl.NumberFormat().format(downloads.downloads.reduce((sum, current) =>
-
+                <Title>Adoption</Title>
+                <Title>{convert.formatNumber(downloads.downloads.reduce((sum, current) =>
                     sum + current.downloads, 0
-                ))} last week</Title>
+                ))} last month</Title>
+            </div>
+            <div className='flex justify-center gap-x-2 my-6'>
+                <Button variant='secondary' color='gray'>stars: {convert.formatNumber(stars)}</Button>
+                <Button variant='secondary' color='gray'>forks: {convert.formatNumber(forks)}</Button>
+                <Button variant='secondary' color='gray'>open issues: {convert.formatNumber(openIssues)}</Button>
             </div>
             <AreaChart
-                className="mt-6"
+                className=""
                 data={downloads.downloads}
                 index="day"
                 categories={["downloads"]}

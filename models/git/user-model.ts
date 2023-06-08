@@ -29,6 +29,6 @@ export default class UserModel {
     "public_gists": number;
     "followers": number;
     "following": number;
-    "created_at": DateConstructor;
-    "updated_at": DateConstructor;
+    "created_at": string;
+    "updated_at": string;
 }
