@@ -15,10 +15,6 @@ export async function GET(
     const packageName = params.packageName;
     const data = new PackageFullModel();
     const npmPackageInfo = await npm.getPackageInfo(packageName, false);
-    // const npmVersionInfo = await npm.getVersionInfo({
-    //     name: packageName,
-    //     version: npmPackageInfo["dist-tags"].latest,
-    // });
     const [owner, repo] = convert.gitUrlToRepoParams(
         npmPackageInfo.repository.url
     );
@@ -29,9 +25,7 @@ export async function GET(
     const depsDevProjectInfo = await depsDev.getProject(
         npmPackageInfo.repository.url
     );
-    const vulns = await osv.getVulns(`pkg:npm/${packageName}`);
-    console.log(vulns);
-    
+    const vulns = await osv.getVulns(`pkg:npm/${packageName}`);    
     const lastYearTimeRange = convert.lastYearTimeRange();
     const lastYearTotal = await npm.getPackagePointDownloads(
         packageName,
@@ -41,6 +35,7 @@ export async function GET(
         packageName,
         lastYearTimeRange
     );
+    const lastYearByMonths = convert.lastYearToMonths(lastYearRange.downloads as {downloads: number, day: string}[])
     const perVersion = await npm.getPackageVersionsDownloads(packageName);
     const tags = depsDevPackageInfo.versions.map((v) => ({
         name: v.versionKey.name,
@@ -48,7 +43,9 @@ export async function GET(
         publishedAt: v.publishedAt,
         isDefault: v.isDefault,
     }));
-
+    
+    console.log(tags);
+    
     data.name = packageName;
     data.ecosystem = "npm";
     data.description = npmPackageInfo.description;
@@ -89,13 +86,13 @@ export async function GET(
     data.versions = {
         current: npmPackageInfo["dist-tags"].latest,
         next: npmPackageInfo["dist-tags"].next || null,
-        count: tags.length,
+        count: tags?.length || 0,
         tags: tags,
     };
     data.security = {
         scorecard: depsDevProjectInfo.scorecard,
         vulnerabilities: {
-            count: vulns.length || 0
+            count: vulns?.length || 0
         },
     };
     data.links = {
@@ -114,12 +111,12 @@ export async function GET(
             startDate: lastYearRange.start,
             endDate: lastYearRange.end,
             lastYearTotal: lastYearTotal.downloads as number,
-            lastYearRange: lastYearRange.downloads as {
+            lastYearRange: lastYearByMonths as {
                 downloads: number;
-                day: string;
+                month: string;
             }[],
             perVersion: perVersion.download,
         },
     };
-    return NextResponse.json({ data });
+    return NextResponse.json({ ...data });
 }

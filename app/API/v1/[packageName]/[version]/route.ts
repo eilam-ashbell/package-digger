@@ -29,10 +29,6 @@ export async function GET(
         .map((d) => [[d.versionKey.name], d.versionKey.version]);
 
     const dep = Object.fromEntries(indirect);
-    // for (let d of indirect) {
-    console.log(dep);
-    // data.dependencies.inDirect[dep[0][0]] = dep[0][1];
-    // }
 
     data.name = npmVersionInfo.name;
     data.tag = params.version;
@@ -51,9 +47,18 @@ export async function GET(
         direct: npmVersionInfo.dependencies,
         dev: npmVersionInfo.devDependencies,
         inDirect: dep,
+        count: {
+            direct: npmVersionInfo.dependencies
+                ? Object.keys(npmVersionInfo.dependencies).length
+                : 0,
+            dev: npmVersionInfo.devDependencies
+                ? Object.keys(npmVersionInfo.devDependencies).length
+                : 0,
+            inDirect: dep ? Object.keys(dep).length : 0,
+        },
     };
     data.vulnerabilities = {
         vulns: vulnerabilities,
     };
-    return NextResponse.json({ data });
+    return NextResponse.json({ ...data });
 }

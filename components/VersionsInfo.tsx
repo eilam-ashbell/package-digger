@@ -1,44 +1,42 @@
-import { Card, Bold, Text } from '@tremor/react';
-import { versions } from 'process';
+import { Bold, Text } from '@tremor/react';
 import * as React from 'react';
 import VersionSelect from './VersionSelect';
-import VersionInfoModel from '@/models/united/version-info-model';
+import PackageFullModel from '@/models/package-full-model';
 
-export default function VersionsInfo(vInfo: VersionInfoModel) {
-    const { currentVersion, versions, versionsCount, created, lastModified, lastPublish } = vInfo
+export default function VersionsInfo(packageInfo: PackageFullModel) {
     return (
         <>
-            <VersionSelect versions={versions} current={currentVersion} />
+            <VersionSelect versions={packageInfo.versions} />
             <div className='flex flex-col gap-y-2 divide-y' >
                 <Text className='flex flex row justify-between pt-2'>
                     <Bold className='text-slate-400'>
                         {`Current: `}
                     </Bold>
-                    {currentVersion}
+                    {packageInfo.versions?.current}
                 </Text>
                 <Text className='flex flex row justify-between  pt-2'>
                     <Bold className='text-slate-400'>
                         {`Versions count: `}
                     </Bold>
-                    {versionsCount}
+                    {packageInfo.versions?.count}
                 </Text>
                 <Text className='flex flex row justify-between pt-2'>
                     <Bold className='text-slate-400'>
                         {`Created: `}
                     </Bold>
-                    {created.toLocaleDateString('he-il')}
+                    {new Date(packageInfo.metadata?.package.created).toLocaleDateString('he-il')}
                 </Text>
                 <Text className='flex flex row justify-between pt-2'>
                     <Bold className='text-slate-400'>
                         {`Last publish: `}
                     </Bold>
-                    {lastPublish.toLocaleDateString('he-il')}
+                    {new Date(packageInfo.versions?.tags[packageInfo.versions?.tags.length - 1].publishedAt).toLocaleDateString('he-il')}
                 </Text>
                 <Text className='flex flex row justify-between pt-2'>
                     <Bold className='text-slate-400'>
                         {`Last modified: `}
                     </Bold>
-                    {lastModified.toLocaleDateString('he-il')}
+                    {new Date(packageInfo.metadata?.package.created).toLocaleDateString('he-il')}
                 </Text>
             </div>
         </>

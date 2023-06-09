@@ -5,10 +5,11 @@ import npm from '@/utils/npm';
 import UnitedDepsModel from '@/models/united/deps-model';
 import { DownloadIcon } from '@heroicons/react/solid'
 import DependencyListItem from './DependencyListItem';
+import VersionFullModel from '@/models/version-full-model';
 
-export default function DependenciesCard(deps: UnitedDepsModel) {
+export default function DependenciesCard(deps: Pick<VersionFullModel, 'dependencies'>) {
     const [value, setValue] = React.useState("1");
-    const { direct, indirect, dev } = deps;
+    const { direct, inDirect, dev } = deps.dependencies;
     return (
         <div className='flex flex-col gap-x-4'>
             <Title>Dependencies</Title>
@@ -16,7 +17,7 @@ export default function DependenciesCard(deps: UnitedDepsModel) {
                 <TabList value={value} onValueChange={(value) => setValue(value)} >
                     <Tab value="1" text={`Direct (${direct && Object.entries(direct).length || 0})`} />
                     <Tab value="2" text={`Dev (${dev && Object.entries(dev).length || 0})`} />
-                    <Tab value="3" text={`Indirect (${indirect && Object.entries(indirect).length || 0})`} />
+                    <Tab value="3" text={`Indirect (${inDirect && Object.entries(inDirect).length || 0})`} />
                 </TabList>
                 {
                     (value === "1") && direct && <div className='h-60 overflow-y-scroll'>
@@ -28,8 +29,8 @@ export default function DependenciesCard(deps: UnitedDepsModel) {
                     </div>
                 }
                 {
-                    (value === "3") && indirect && <div className='h-60 overflow-y-scroll'>
-                        {Object.entries(indirect).map(d => <DependencyListItem depItem={d} />)}
+                    (value === "3") && inDirect && <div className='h-60 overflow-y-scroll'>
+                        {Object.entries(inDirect).map(d => <DependencyListItem depItem={d} />)}
                     </div>
                 }
             </div>

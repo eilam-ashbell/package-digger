@@ -100,7 +100,7 @@ export default class PackageFullModel {
             lastYearTotal: number;
             lastYearRange: {
                 downloads: number;
-                day: string;
+                month: string;
             }[];
             perVersion: Record<string, number>;
         };

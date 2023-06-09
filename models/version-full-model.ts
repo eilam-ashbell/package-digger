@@ -27,9 +27,14 @@ export default class VersionFullModel {
     isDefault: boolean;
     advisoryKeys: string[];
     dependencies: {
-        direct: Record<string, string>;
-        inDirect: Record<string, string>;
-        dev: Record<string, string>;
+        direct: Record<string, string> | null;
+        inDirect: Record<string, string> | null;
+        dev: Record<string, string> | null ;
+        count: {
+            direct: number;
+            inDirect: number;
+            dev: number;
+        };
     };
     vulnerabilities: {
         vulns: OsvVulnerabilityModel[];

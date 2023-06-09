@@ -70,7 +70,7 @@ export default function SearchPackage() {
     const [options, setOptions] = React.useState<SearchPackageResultsModel[]>()
 
     const handleChange = async (event) => {
-        setQuery(event.target.value)
+        setQuery(event.target.value[0])
         const res = await npm.searchPackageName(event.target.value, 5)
         setOptions(res)
     }
@@ -82,19 +82,19 @@ export default function SearchPackage() {
         router.push(`/npm/${packageName}`)
     }
 
-    const handleSelect = (pkgName: string) => {
-        const packageName = convert.url(pkgName)
-        router.push(`/npm/${packageName}`)
+    const handleSelect = (pkg: string[]) => {
+        const packageName = convert.url(pkg[0])
+        router.push(`/npm/${packageName}/${pkg[1]}`)
     }
 
-    const handleKeyDown = (event, pkgName) => {
+    const handleKeyDown = (event, pkg: string[]) => {
         console.log('in');
 
         if (event.key === 'Enter') {
             console.log('enter');
 
-            const packageName = convert.url(pkgName)
-            router.push(`/npm/${packageName}`)
+            const packageName = convert.url(pkg[0])
+            router.push(`/npm/${packageName}/${pkg[1]}`)
         }
     };
 
@@ -109,7 +109,7 @@ export default function SearchPackage() {
                     />
                     <Combobox.Options className='absolute z-50 bg bg-white divide-y divide-slate-100 cursor-pointer w-full rounded-md overflow-hidden shadow-lg'>
                         {options?.map((opt) => (
-                            <Combobox.Option key={opt.package.name} value={opt.package.name} onClick={() => handleSelect(opt.package.name)} onKeyDown={() => handleKeyDown(event, opt.package.name
+                            <Combobox.Option key={opt.package.name} value={[opt.package.name, opt.package.version]} onClick={() => handleSelect([opt.package.name, opt.package.version])} onKeyDown={() => handleKeyDown(event, [opt.package.name, opt.package.version]
                             )}>
                                 {({ active, selected }) => (
                                     <div className={`px-6 py-2 hover:bg-slate-50 w-full flex flex-col gap-y-2 ${active ? 'bg-slate-100' : null} ${selected ? 'bg-slate-200' : null}`} key={`${opt.package.name}`}>
@@ -127,7 +127,7 @@ export default function SearchPackage() {
                     </Combobox.Options>
                 </Combobox>
             </div>
-            <Button type='submit' icon={SearchIcon} className='pr-2'/>
+            <Button type='submit' icon={SearchIcon} className='pr-2' />
         </form>
     )
 
