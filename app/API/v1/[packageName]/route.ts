@@ -14,18 +14,36 @@ export async function GET(
 ) {
     const packageName = params.packageName;
     const data = new PackageFullModel();
+
+    // Get package info from npm
     const npmPackageInfo = await npm.getPackageInfo(packageName, false);
+
+    // Get repo info from github
     const [owner, repo] = convert.gitUrlToRepoParams(
         npmPackageInfo.repository.url
     );
     const gitRepoInfo = await git.getRepo(owner, repo);
     const gitRepoUser = await git.getUser(gitRepoInfo.owner.login);
     const gitRepoLanguages = await git.getLanguages(gitRepoInfo.git_url);
+    const gitRepoContributors = await git.getContributors(
+        gitRepoInfo.contributors_url, 4
+    );
+    const gitRepoContributorsInfo = await git.getContributorsInfo(
+        gitRepoContributors
+    );
+    const gitRepoContributorsInfoUnit = gitRepoContributorsInfo.map( (c, i) => ({...c, contributions: gitRepoContributors[i].contributions}))
+
+    // Get package dependencies from DepsDev
     const depsDevPackageInfo = await depsDev.getPackage(packageName, "NPM");
     const depsDevProjectInfo = await depsDev.getProject(
         npmPackageInfo.repository.url
     );
-    const vulns = await osv.getVulns(`pkg:npm/${packageName}`);    
+
+    // Get vulnerabilities from OSV
+    const vulns = await osv.getVulns(`pkg:npm/${packageName}`);
+
+    // Get package download data from npm
+    // ! todo - handle time ranges
     const lastYearTimeRange = convert.lastYearTimeRange();
     const lastYearTotal = await npm.getPackagePointDownloads(
         packageName,
@@ -35,7 +53,9 @@ export async function GET(
         packageName,
         lastYearTimeRange
     );
-    const lastYearByMonths = convert.lastYearToMonths(lastYearRange.downloads as {downloads: number, day: string}[])
+    const lastYearByMonths = convert.lastYearToMonths(
+        lastYearRange.downloads as { downloads: number; day: string }[]
+    );
     const perVersion = await npm.getPackageVersionsDownloads(packageName);
     const tags = depsDevPackageInfo.versions.map((v) => ({
         name: v.versionKey.name,
@@ -43,9 +63,6 @@ export async function GET(
         publishedAt: v.publishedAt,
         isDefault: v.isDefault,
     }));
-    
-    console.log(tags);
-    
     data.name = packageName;
     data.ecosystem = "npm";
     data.description = npmPackageInfo.description;
@@ -63,6 +80,7 @@ export async function GET(
                     : "Not provided",
             name: repo,
             owner: owner,
+            contributors: gitRepoContributorsInfoUnit,
             author: {
                 username: gitRepoUser.login,
                 email: gitRepoUser.email,
@@ -92,7 +110,7 @@ export async function GET(
     data.security = {
         scorecard: depsDevProjectInfo.scorecard,
         vulnerabilities: {
-            count: vulns?.length || 0
+            count: vulns?.length || 0,
         },
     };
     data.links = {

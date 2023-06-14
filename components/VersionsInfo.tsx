@@ -2,8 +2,11 @@ import { Bold, Text } from '@tremor/react';
 import * as React from 'react';
 import VersionSelect from './VersionSelect';
 import PackageFullModel from '@/models/package-full-model';
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+dayjs.extend(relativeTime)
 
-export default function VersionsInfo(packageInfo: PackageFullModel) {
+export default function VersionsInfo(packageInfo: PackageFullModel) {    
     return (
         <>
             <VersionSelect versions={packageInfo.versions} />
@@ -24,19 +27,19 @@ export default function VersionsInfo(packageInfo: PackageFullModel) {
                     <Bold className='text-slate-400'>
                         {`Created: `}
                     </Bold>
-                    {new Date(packageInfo.metadata?.package.created).toLocaleDateString('he-il')}
+                    {dayjs(new Date(packageInfo.metadata?.package.created)).fromNow()}
                 </Text>
                 <Text className='flex flex row justify-between pt-2'>
                     <Bold className='text-slate-400'>
                         {`Last publish: `}
                     </Bold>
-                    {new Date(packageInfo.versions?.tags[packageInfo.versions?.tags.length - 1].publishedAt).toLocaleDateString('he-il')}
+                    {dayjs(new Date(packageInfo.versions?.tags[packageInfo.versions?.tags.findIndex( v => v.tag === packageInfo.versions.current)].publishedAt)).fromNow()}
                 </Text>
                 <Text className='flex flex row justify-between pt-2'>
                     <Bold className='text-slate-400'>
                         {`Last modified: `}
                     </Bold>
-                    {new Date(packageInfo.metadata?.package.created).toLocaleDateString('he-il')}
+                    {dayjs(new Date(packageInfo.metadata?.package.lastModified)).fromNow()}
                 </Text>
             </div>
         </>

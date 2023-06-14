@@ -88,10 +88,8 @@ export default function SearchPackage() {
     }
 
     const handleKeyDown = (event, pkg: string[]) => {
-        console.log('in');
 
         if (event.key === 'Enter') {
-            console.log('enter');
 
             const packageName = convert.url(pkg[0])
             router.push(`/npm/${packageName}/${pkg[1]}`)

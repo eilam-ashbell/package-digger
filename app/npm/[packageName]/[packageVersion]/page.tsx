@@ -1,41 +1,31 @@
 import DependenciesCard from '@/components/DependenciesCard';
-import npm from '@/utils/npm';
 import { Card, Title, Text, Bold, Metric } from '@tremor/react';
 import * as React from 'react';
 import PackageInfo from '@/components/PackageInfo';
 import VersionsInfo from '@/components/VersionsInfo';
 import DownloadsCard from '@/components/DownloadsCard';
 import DistCard from '@/components/DistCard';
-import git from '@/utils/git';
 import LanguageData from '@/components/LanguageData';
-import uniteData from '@/utils/unitedData';
-import depsDev from '@/utils/depsDev';
-import convert from '@/utils/convert';
 import axios from 'axios';
 import PackageFullModel from '@/models/package-full-model';
 import VersionFullModel from '@/models/version-full-model';
+import abbreviate from 'number-abbreviate'
+import Image from 'next/image';
 
 export default async function page({ params }) {
     const { packageName, packageVersion } = params;
-    // const latestVersion = await npm.getPackageLatestVersion(packageName)
-    // const versionInfo = await npm.getVersionInfo({ name: packageName, version: packageVersion })
-    // const deps = await uniteData.getDeps({ name: packageName, version: packageVersion })
-    // const adoption = await uniteData.getAdoption(versionInfo)
-    // const languages = await git.getLanguages(versionInfo.repository.url)
-    // const vInfo = await uniteData.getVersionInfo(packageName)
-    // const test = await depsDev.getProject(versionInfo.repository.url)    
-    console.log(packageName, packageVersion);
     const packageInfo = await axios.get<PackageFullModel>(`http://localhost:3000/API/v1/${packageName}`)
     const versionInfo = await axios.get<VersionFullModel>(`http://localhost:3000/API/v1/${packageName}/${packageVersion}`)
-
-    console.log(packageInfo);
-    console.log(versionInfo);
-
     return (
         <div className='flex flex-col gap-y-2'>
             <div className='flex gap-x-2'>
                 <Card className='bg-white px-8 py-4 rounded-md flex flex-col gap-y-4 text-slate-800 w-2/3'>
                     <PackageInfo name={packageInfo.data.name} description={versionInfo.data.description} keywords={packageInfo.data.metadata.keywords} />
+                    <span>{packageInfo.data.metadata.license}</span>
+                    <span>author: {packageInfo.data.metadata.package.author?.name}</span>
+                    {/* <img src={packageInfo.data.metadata.repo.author.avatarUrl} alt=''></img> */}
+
+                    {/* {packageInfo.data.metadata.repo.contributors.map(c => <><span>{c.name}|{c.contributions}</span><img src={c.avatar_url} alt=''></img></>)} */}
                 </Card>
                 <Card className='w-1/3 flex flex-col gap-y-2'>
                     <VersionsInfo {...packageInfo.data} />
@@ -44,11 +34,15 @@ export default async function page({ params }) {
             <div className='flex gap-x-2'>
                 <Card className="max-w-xs mx-auto">
                     <Text>Downloads last year</Text>
-                    <Metric>{convert.formatNumber(packageInfo.data.adoption.downloads.lastYearTotal)}</Metric>
+                    <Metric>{abbreviate(packageInfo.data.adoption.downloads.lastYearTotal, 1)}</Metric>
                 </Card>
                 <Card className="max-w-xs mx-auto">
                     <Text>Vulnerabilities</Text>
                     <Metric>{versionInfo.data.vulnerabilities.vulns?.length || 0}</Metric>
+                </Card>
+                <Card className="max-w-xs mx-auto">
+                    <Text>Scorecard</Text>
+                    <Metric>{packageInfo.data.security.scorecard.overallScore || 0}/10</Metric>
                 </Card>
                 <Card>
                     <Text>Total deps</Text>
@@ -74,13 +68,13 @@ export default async function page({ params }) {
                     </div>
                 </Card>
             </div>
-            {/* <Card>
+            <Card>
                 <div className='flex justify-between'>
                     <Title>Scorecard</Title>
-                    <Title>{test.scorecard.overallScore}</Title>
+                    <Title>{packageInfo.data.security.scorecard.overallScore}</Title>
                 </div>
                 {
-                    test.scorecard.checks.map(c => <div className='p-6'>
+                    packageInfo.data.security.scorecard.checks.map(c => <div className='p-6' key={c.name}>
                         <div className='flex justify-between'>
                             <Title>
                                 {c.name}
@@ -104,9 +98,9 @@ export default async function page({ params }) {
             </Card>
             <ul>
                 {
-                    test.scorecard.checks.filter(c => c.name === 'Vulnerabilities')[0].details.map(v => <li>{v.replace('Warn: Project is vulnerable to: ', '')}</li>)
+                    versionInfo.data.vulnerabilities.vulns?.map(v => <li key={v.id}>{v.summary}</li>)
                 }
-            </ul> */}
+            </ul>
         </div>
     )
 }

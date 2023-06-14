@@ -119,7 +119,7 @@ async function getPackageVersionsDownloads(
 
 async function getPackageRangeDownloads(
     packageName: string,
-    timeRange: ITimeRange
+    timeRange: ITimeRange | 'last-day' | 'last-week' | 'last-month'
 ): Promise<PackageDownloadModel> {
     const { data } = await axios.get<PackageDownloadModel>(
         `https://api.npmjs.org/downloads/range/${timeRange}/${packageName}`, {

@@ -1,3 +1,5 @@
+import UserModel from "./git/user-model";
+
 export default class PackageFullModel {
     name: string;
     ecosystem: string;
@@ -19,6 +21,7 @@ export default class PackageFullModel {
             url: string;
             name: string;
             owner: string;
+            contributors: UserModel[];
             author: {
                 username: string;
                 email: string;

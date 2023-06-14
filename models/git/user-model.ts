@@ -31,4 +31,5 @@ export default class UserModel {
     "following": number;
     "created_at": string;
     "updated_at": string;
+    "contributions"?: number;
 }

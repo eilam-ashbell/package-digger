@@ -21,16 +21,16 @@ export default function DependenciesCard(deps: Pick<VersionFullModel, 'dependenc
                 </TabList>
                 {
                     (value === "1") && direct && <div className='h-60 overflow-y-scroll'>
-                        {Object.entries(direct).map(d => <DependencyListItem depItem={d} />)}
+                        {Object.entries(direct).map((d, i) => <DependencyListItem key={i} depItem={d} index={i} />)}
                     </div>}
                 {
                     (value === "2") && dev && <div className='h-60 overflow-y-scroll'>
-                        {Object.entries(dev).map(d => <DependencyListItem depItem={d} />)}
+                        {Object.entries(dev).map((d, i) => <DependencyListItem key={i} depItem={d} index={i} />)}
                     </div>
                 }
                 {
                     (value === "3") && inDirect && <div className='h-60 overflow-y-scroll'>
-                        {Object.entries(inDirect).map(d => <DependencyListItem depItem={d} />)}
+                        {Object.entries(inDirect).map((d, i) => <DependencyListItem key={i} depItem={d} index={i} />)}
                     </div>
                 }
             </div>

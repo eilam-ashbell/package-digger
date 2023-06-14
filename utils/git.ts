@@ -21,10 +21,8 @@ async function getUser(username: string) {
     return data;
 }
 
-async function getLanguages(
-    repoUrl: string
-): Promise<Record<string, number>> {
-    const [owner, repo ] = convert.gitUrlToRepoParams(repoUrl)
+async function getLanguages(repoUrl: string): Promise<Record<string, number>> {
+    const [owner, repo] = convert.gitUrlToRepoParams(repoUrl);
     const { data } = await git.get<Record<string, number>>(
         `repos/${owner}/${repo}/languages`
     );
@@ -51,9 +49,40 @@ async function getStargazers(
     return data;
 }
 
+async function getContributors(
+    apiUrl: string,
+    max: number = 5,
+    per_page: number = 100,
+    page: number = 1
+): Promise<UserModel[]> {
+    const query = {
+        per_page: per_page > max ? max : per_page,
+        page: page,
+    };
+    const { data } = await git.get<UserModel[]>(apiUrl, { params: query });
+    while (data.length < max) {
+        const res = await git.get<UserModel[]>(apiUrl, {
+            params: { per_page: per_page, page: page + 1 },
+        });
+        data.push(...res.data);
+    }
+    return data.slice(0, max);
+}
+
+async function getContributorsInfo(users: UserModel[]) {
+    const usersInfo: UserModel[] = [];
+    for (let u of users) {
+        const { data } = await git.get<UserModel>(u.url);
+        usersInfo.push(data);
+    }
+    return usersInfo;
+}
+
 export default {
     getRepo,
     getUser,
     getLanguages,
-    getStargazers
+    getStargazers,
+    getContributors,
+    getContributorsInfo,
 };

@@ -21,12 +21,21 @@ function gitUrlToRepoParams(url: string): string[] {
 }
 
 function lastYearTimeRange(): ITimeRange {
-    const today = new Date();
+    const today = new Date();    
     return `${today.getFullYear() - 1}-${
         today.getMonth() + 1
-    }-${today.getDay()}:${today.getFullYear()}-${
+    }-${today.getDate()}:${today.getFullYear()}-${
         today.getMonth() + 1
-    }-${today.getDay()}`;
+    }-${today.getDate()}`;
+}
+
+function lastWeekTimeRange(): ITimeRange {
+    const today = new Date();    
+    return `${today.getFullYear() - 1}-${
+        today.getMonth() + 1
+    }-${today.getDate()}:${today.getFullYear()}-${
+        today.getMonth() + 1
+    }-${today.getDate()}`;
 }
 
 function lastYearToMonths(download: { downloads: number; day: string }[]) {

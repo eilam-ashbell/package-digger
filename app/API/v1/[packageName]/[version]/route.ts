@@ -23,6 +23,8 @@ export async function GET(
         params.version
     );
     const vulnerabilities = await osv.getVulns(`pkg:npm/${npmVersionInfo._id}`);
+    const directDeps = npmVersionInfo.dependencies ? Object.fromEntries(Object.entries(npmVersionInfo.dependencies).map( d => [d[0], d[1].replace(/^[^\d]+/, '')])) : null
+    const devDeps = npmVersionInfo.devDependencies ? Object.fromEntries(Object.entries(npmVersionInfo.devDependencies).map( d => [d[0], d[1].replace(/^[^\d]+/, '')])) : null
     const data = new VersionFullModel();
     const indirect = depsDevDependencies.nodes
         .filter((d) => d.relation === "INDIRECT")
@@ -44,8 +46,8 @@ export async function GET(
     data.isDefault = depsDevVersionInfo.isDefault;
     data.advisoryKeys = depsDevVersionInfo.advisoryKeys;
     data.dependencies = {
-        direct: npmVersionInfo.dependencies,
-        dev: npmVersionInfo.devDependencies,
+        direct: directDeps,
+        dev: devDeps,
         inDirect: dep,
         count: {
             direct: npmVersionInfo.dependencies
