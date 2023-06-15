@@ -5,6 +5,7 @@ import depsDev from "@/utils/depsDev";
 import git from "@/utils/git";
 import npm from "@/utils/npm";
 import osv from "@/utils/osv";
+import dayjs from "dayjs";
 import { NextRequest, NextResponse } from "next/server";
 import { format } from "util";
 
@@ -44,19 +45,19 @@ export async function GET(
 
     // Get package download data from npm
     // ! todo - handle time ranges
-    const lastYearTimeRange = convert.lastYearTimeRange();
-    const lastYearTotal = await npm.getPackagePointDownloads(
+    const timeRange = convert.parseDatesToQuery([dayjs().subtract(7, 'd').toDate(), new Date(), null])
+    const total = await npm.getPackagePointDownloads(
         packageName,
-        lastYearTimeRange
+        timeRange
     );
-    const lastYearRange = await npm.getPackageRangeDownloads(
+    const range = await npm.getPackageRangeDownloads(
         packageName,
-        lastYearTimeRange
-    );
-    const lastYearByMonths = convert.lastYearToMonths(
-        lastYearRange.downloads as { downloads: number; day: string }[]
+        timeRange
     );
     const perVersion = await npm.getPackageVersionsDownloads(packageName);
+    const perVersionParsed = Object.entries(perVersion.downloads).map( v => ({name: v[0], downloads: v[1]})).sort((a, b) => b.downloads - a.downloads);
+
+
     const tags = depsDevPackageInfo.versions.map((v) => ({
         name: v.versionKey.name,
         tag: v.versionKey.version,
@@ -126,14 +127,14 @@ export async function GET(
         openIssues: gitRepoInfo.open_issues_count,
         watchers: gitRepoInfo.watchers_count,
         downloads: {
-            startDate: lastYearRange.start,
-            endDate: lastYearRange.end,
-            lastYearTotal: lastYearTotal.downloads as number,
-            lastYearRange: lastYearByMonths as {
+            startDate: range.start,
+            endDate: range.end,
+            point: total.downloads as number,
+            range: range.downloads as {
                 downloads: number;
-                month: string;
+                day: string;
             }[],
-            perVersion: perVersion.download,
+            perVersion: perVersionParsed,
         },
     };
     return NextResponse.json({ ...data });

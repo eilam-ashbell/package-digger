@@ -1,4 +1,6 @@
 import { ITimeRange } from "@/models/npm/ITimeRange";
+import { DateRangePickerValue } from "@tremor/react";
+import dayjs from "dayjs";
 
 function url(url: string): string {
     url = url
@@ -21,7 +23,7 @@ function gitUrlToRepoParams(url: string): string[] {
 }
 
 function lastYearTimeRange(): ITimeRange {
-    const today = new Date();    
+    const today = new Date();
     return `${today.getFullYear() - 1}-${
         today.getMonth() + 1
     }-${today.getDate()}:${today.getFullYear()}-${
@@ -29,13 +31,17 @@ function lastYearTimeRange(): ITimeRange {
     }-${today.getDate()}`;
 }
 
-function lastWeekTimeRange(): ITimeRange {
-    const today = new Date();    
-    return `${today.getFullYear() - 1}-${
-        today.getMonth() + 1
-    }-${today.getDate()}:${today.getFullYear()}-${
-        today.getMonth() + 1
-    }-${today.getDate()}`;
+function parseDatesToQuery(dates: DateRangePickerValue): ITimeRange {
+    const firstDate = new Date(dates[0]);
+    const secondDate = new Date(dates[1]);
+    const todayParsed = dayjs(new Date()).format("YYYY-MM-DD");
+    const firstParsed = dayjs(firstDate).format("YYYY-MM-DD");
+    const secondParsed = dayjs(secondDate).format("YYYY-MM-DD");
+    const dateQuery =
+        firstParsed === todayParsed && secondParsed === todayParsed
+            ? "last-day"
+            : `${firstParsed}:${secondParsed}`;
+    return dateQuery as ITimeRange;
 }
 
 function lastYearToMonths(download: { downloads: number; day: string }[]) {
@@ -61,14 +67,14 @@ function lastYearToMonths(download: { downloads: number; day: string }[]) {
                 downloads: convertedToMonth
                     .filter((d) => d.month === `${i}/${y}`)
                     .reduce((sum, current) => sum + current.downloads, 0),
-                month: `${i}/${y}`,
+                day: `${i}/${y}`,
             };
             downloadsPerMonth.push(DownloadObj);
         }
     }
     downloadsPerMonth.sort((a, b) => {
-        const aSplit = a.month.split("/");
-        const bSplit = b.month.split("/");
+        const aSplit = a.day.split("/");
+        const bSplit = b.day.split("/");
         if (aSplit[1] === bSplit[1]) {
             return Number(aSplit[0]) < Number(bSplit[0]) ? -1 : 1;
         } else {
@@ -84,4 +90,5 @@ export default {
     gitUrlToRepoParams,
     lastYearTimeRange,
     lastYearToMonths,
+    parseDatesToQuery,
 };

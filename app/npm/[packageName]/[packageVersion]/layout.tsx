@@ -11,7 +11,7 @@ export default function PackageLayout({
     children: React.ReactNode
 }) {
     return (
-            <div className='w-full max-w-screen-md m-auto my-6'>
+            <div className='w-full max-w-screen-xl m-auto my-6 px-6'>
                 {children}
             </div>
     )

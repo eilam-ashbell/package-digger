@@ -1,3 +1,4 @@
+import DownloadsFullModel from "./downloads-full-model";
 import UserModel from "./git/user-model";
 
 export default class PackageFullModel {
@@ -97,15 +98,6 @@ export default class PackageFullModel {
         forksCount: number;
         openIssues: number;
         watchers: number;
-        downloads: {
-            startDate: string;
-            endDate: string;
-            lastYearTotal: number;
-            lastYearRange: {
-                downloads: number;
-                month: string;
-            }[];
-            perVersion: Record<string, number>;
-        };
+        downloads: DownloadsFullModel;
     };
 }

@@ -11,59 +11,6 @@ import { SearchIcon } from '@heroicons/react/solid'
 
 export default function SearchPackage() {
     const router = useRouter();
-    // const [pkg, setPkg] = React.useState<{ value: string, label: string }>()
-    // const [options, setOptions] = React.useState<{ value: string, label: string }[]>()
-
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault()
-    //     const packageName = convert.url(pkg.value)
-    //     // const latest = await npm.getPackageLatestVersion(pkg.value)
-    //     e.target.reset()
-    //     router.push(`/package/${packageName}`)
-    // }
-
-    // const handleChange = async (e) => {
-    //     // e.preventDefault()
-    //     setPkg(e.target.value)
-    //     const res = await npm.searchPackageName(e.target.value, 5)
-    //     console.log(res);
-    //     const suggestions = res.map( r => ({value: r.package.name, label: r.package.name}))
-    //     setOptions(suggestions)
-    // }
-
-    // const handleSelect = (packageName: string) => {
-    //     setPkg(null)
-    //     setOptions(null)
-    //     router.push(`/package/${packageName}`)
-    // }
-
-    // return (
-    // <form onSubmit={handleSubmit}>
-    //     <input type="text" name='pkgName' onChange={handleChange} value={route}/>
-
-    //     {/* <datalist id="packages">
-    //         {searchOptions?.map(p =>
-    //             <option value={p.package.name} key={`${p.package.name}@${p.package.version}`}>{`${p.package.name}@${p.package.version}`}
-    //             </option>
-    //         )}
-    //     </datalist> */}
-    //     <div className={`absolute z-50 bg bg-white divide-y divide-slate-100 cursor-pointer`}>
-    //         {searchOptions?.map(p =>
-    //             <div className={`px-6 py-2 hover:bg-slate-100 w-100`} key={`${p.package.name}`}>
-    //                 <div className={`flex flex-row justify-between`} onClick={() => handleSelect(p.package.name)}>
-    //                     <span className={`text-l`}>{`${p.package.name}`}</span>
-    //                     <span className={`bg-slate-300 px-2 py-0.5 text-sm rounded self-start`}>{p.score.final.toFixed(2)}</span>
-    //                 </div>
-    //                 <span className={`text-xs`}>{`v${p.package.version}`}</span>
-    //             </div>
-    //         )}
-    //     </div>
-
-    //     <button type="submit">Search</button>
-    // </form>
-
-    //         <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} />
-    //     )
 
     const [selectedPkg, setSelectedPkg] = React.useState('')
     const [query, setQuery] = React.useState<string>('')

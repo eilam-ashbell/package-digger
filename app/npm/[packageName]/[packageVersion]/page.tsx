@@ -11,11 +11,12 @@ import PackageFullModel from '@/models/package-full-model';
 import VersionFullModel from '@/models/version-full-model';
 import abbreviate from 'number-abbreviate'
 import Image from 'next/image';
+import Adoption from '@/components/Adoption';
 
 export default async function page({ params }) {
     const { packageName, packageVersion } = params;
-    const packageInfo = await axios.get<PackageFullModel>(`http://localhost:3000/API/v1/${packageName}`)
-    const versionInfo = await axios.get<VersionFullModel>(`http://localhost:3000/API/v1/${packageName}/${packageVersion}`)
+    const packageInfo = await axios.get<PackageFullModel>(`http://localhost:3000/API/v1/package/${packageName}`)
+    const versionInfo = await axios.get<VersionFullModel>(`http://localhost:3000/API/v1/package/${packageName}/${packageVersion}`)
     return (
         <div className='flex flex-col gap-y-2'>
             <div className='flex gap-x-2'>
@@ -34,7 +35,7 @@ export default async function page({ params }) {
             <div className='flex gap-x-2'>
                 <Card className="max-w-xs mx-auto">
                     <Text>Downloads last year</Text>
-                    <Metric>{abbreviate(packageInfo.data.adoption.downloads.lastYearTotal, 1)}</Metric>
+                    <Metric>{abbreviate(packageInfo.data.adoption.downloads.point, 1)}</Metric>
                 </Card>
                 <Card className="max-w-xs mx-auto">
                     <Text>Vulnerabilities</Text>
@@ -50,7 +51,7 @@ export default async function page({ params }) {
                 </Card>
             </div>
             <Card>
-                <DownloadsCard {...packageInfo.data} />
+                <Adoption {...packageInfo.data} />
             </Card>
             <Card className=''>
                 <DependenciesCard {...versionInfo.data} />
