@@ -1,19 +1,19 @@
-import PackageInfo from "@/components/PackageInfo";
-import PackageFullModel from "@/models/package-full-model";
-import convert from "@/utils/convert";
-import depsDev from "@/utils/depsDev";
-import git from "@/utils/git";
-import npm from "@/utils/npm";
-import osv from "@/utils/osv";
-import dayjs from "dayjs";
-import { NextRequest, NextResponse } from "next/server";
-import { format } from "util";
+import PackageInfo from '@/components/PackageInfo';
+import PackageFullModel from '@/models/package-full-model';
+import convert from '@/utils/convert';
+import depsDev from '@/utils/depsDev';
+import git from '@/utils/git';
+import npm from '@/utils/npm';
+import osv from '@/utils/osv';
+import dayjs from 'dayjs';
+import { NextRequest, NextResponse } from 'next/server';
+import { format } from 'util';
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { packageName: string } }
+    { params }: { params: { packageName: string } },
 ) {
-    const packageName = params.packageName;
+    const packageName = convert.url(params.packageName);
     const data = new PackageFullModel();
 
     // Get package info from npm
@@ -21,23 +21,27 @@ export async function GET(
 
     // Get repo info from github
     const [owner, repo] = convert.gitUrlToRepoParams(
-        npmPackageInfo.repository.url
+        npmPackageInfo.repository.url,
     );
     const gitRepoInfo = await git.getRepo(owner, repo);
     const gitRepoUser = await git.getUser(gitRepoInfo.owner.login);
     const gitRepoLanguages = await git.getLanguages(gitRepoInfo.git_url);
     const gitRepoContributors = await git.getContributors(
-        gitRepoInfo.contributors_url, 4
+        gitRepoInfo.contributors_url,
+        4,
     );
     const gitRepoContributorsInfo = await git.getContributorsInfo(
-        gitRepoContributors
+        gitRepoContributors,
     );
-    const gitRepoContributorsInfoUnit = gitRepoContributorsInfo.map( (c, i) => ({...c, contributions: gitRepoContributors[i].contributions}))
+    const gitRepoContributorsInfoUnit = gitRepoContributorsInfo.map((c, i) => ({
+        ...c,
+        contributions: gitRepoContributors[i].contributions,
+    }));
 
     // Get package dependencies from DepsDev
-    const depsDevPackageInfo = await depsDev.getPackage(packageName, "NPM");
+    const depsDevPackageInfo = await depsDev.getPackage(packageName, 'NPM');
     const depsDevProjectInfo = await depsDev.getProject(
-        npmPackageInfo.repository.url
+        npmPackageInfo.repository.url,
     );
 
     // Get vulnerabilities from OSV
@@ -45,18 +49,17 @@ export async function GET(
 
     // Get package download data from npm
     // ! todo - handle time ranges
-    const timeRange = convert.parseDatesToQuery([dayjs().subtract(7, 'd').toDate(), new Date(), null])
-    const total = await npm.getPackagePointDownloads(
-        packageName,
-        timeRange
-    );
-    const range = await npm.getPackageRangeDownloads(
-        packageName,
-        timeRange
-    );
+    const timeRange = convert.parseDatesToQuery([
+        dayjs().subtract(7, 'd').toDate(),
+        new Date(),
+        null,
+    ]);
+    const total = await npm.getPackagePointDownloads(packageName, timeRange);
+    const range = await npm.getPackageRangeDownloads(packageName, timeRange);
     const perVersion = await npm.getPackageVersionsDownloads(packageName);
-    const perVersionParsed = Object.entries(perVersion.downloads).map( v => ({name: v[0], downloads: v[1]})).sort((a, b) => b.downloads - a.downloads);
-
+    const perVersionParsed = Object.entries(perVersion.downloads)
+        .map((v) => ({ name: v[0], downloads: v[1] }))
+        .sort((a, b) => b.downloads - a.downloads);
 
     const tags = depsDevPackageInfo.versions.map((v) => ({
         name: v.versionKey.name,
@@ -65,7 +68,7 @@ export async function GET(
         isDefault: v.isDefault,
     }));
     data.name = packageName;
-    data.ecosystem = "npm";
+    data.ecosystem = 'npm';
     data.description = npmPackageInfo.description;
     data.metadata = {
         package: {
@@ -76,9 +79,9 @@ export async function GET(
         },
         repo: {
             url:
-                npmPackageInfo.repository.type === "git"
+                npmPackageInfo.repository.type === 'git'
                     ? npmPackageInfo.repository.url
-                    : "Not provided",
+                    : 'Not provided',
             name: repo,
             owner: owner,
             contributors: gitRepoContributorsInfoUnit,
@@ -103,8 +106,8 @@ export async function GET(
         languages: gitRepoLanguages,
     };
     data.versions = {
-        current: npmPackageInfo["dist-tags"].latest,
-        next: npmPackageInfo["dist-tags"].next || null,
+        current: npmPackageInfo['dist-tags'].latest,
+        next: npmPackageInfo['dist-tags'].next || null,
         count: tags?.length || 0,
         tags: tags,
     };
@@ -116,10 +119,10 @@ export async function GET(
     };
     data.links = {
         homepage: npmPackageInfo.homepage,
-        documentation: "",
+        documentation: '',
         issuesTracker: npmPackageInfo.bugs.url,
         sourceRepo: npmPackageInfo.repository.url,
-        origin: "",
+        origin: '',
     };
     data.adoption = {
         starsCount: gitRepoInfo.stargazers_count,

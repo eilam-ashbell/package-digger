@@ -1,12 +1,20 @@
-import { ITimeRange } from "@/models/npm/ITimeRange";
-import { DateRangePickerValue } from "@tremor/react";
-import dayjs from "dayjs";
+import { ITimeRange } from '@/models/npm/ITimeRange';
+import { DateRangePickerValue } from '@tremor/react';
+import dayjs from 'dayjs';
 
 function url(url: string): string {
     url = url
-        .replaceAll("/", "%2F")
-        .replaceAll(" ", "%20")
-        .replaceAll("@", "%40");
+        .replaceAll('/', '%2F')
+        .replaceAll(' ', '%20')
+        .replaceAll('@', '%40');
+    return url;
+}
+
+function fromUrl(url: string): string {
+    url = url
+        .replaceAll('%2F', '/')
+        .replaceAll('%20', ' ')
+        .replaceAll('%40', '@');
     return url;
 }
 
@@ -34,12 +42,12 @@ function lastYearTimeRange(): ITimeRange {
 function parseDatesToQuery(dates: DateRangePickerValue): ITimeRange {
     const firstDate = new Date(dates[0]);
     const secondDate = new Date(dates[1]);
-    const todayParsed = dayjs(new Date()).format("YYYY-MM-DD");
-    const firstParsed = dayjs(firstDate).format("YYYY-MM-DD");
-    const secondParsed = dayjs(secondDate).format("YYYY-MM-DD");
+    const todayParsed = dayjs(new Date()).format('YYYY-MM-DD');
+    const firstParsed = dayjs(firstDate).format('YYYY-MM-DD');
+    const secondParsed = dayjs(secondDate).format('YYYY-MM-DD');
     const dateQuery =
         firstParsed === todayParsed && secondParsed === todayParsed
-            ? "last-day"
+            ? 'last-day'
             : `${firstParsed}:${secondParsed}`;
     return dateQuery as ITimeRange;
 }
@@ -51,7 +59,7 @@ function lastYearToMonths(download: { downloads: number; day: string }[]) {
     const convertedToMonth = download.map((d) => ({
         downloads: d.downloads,
         month: `${new Date(d.day).getMonth() + 1}/${new Date(
-            d.day
+            d.day,
         ).getFullYear()}`,
     }));
     const downloadsPerMonth = [];
@@ -73,8 +81,8 @@ function lastYearToMonths(download: { downloads: number; day: string }[]) {
         }
     }
     downloadsPerMonth.sort((a, b) => {
-        const aSplit = a.day.split("/");
-        const bSplit = b.day.split("/");
+        const aSplit = a.day.split('/');
+        const bSplit = b.day.split('/');
         if (aSplit[1] === bSplit[1]) {
             return Number(aSplit[0]) < Number(bSplit[0]) ? -1 : 1;
         } else {
@@ -86,6 +94,7 @@ function lastYearToMonths(download: { downloads: number; day: string }[]) {
 
 export default {
     url,
+    fromUrl,
     formatNumber,
     gitUrlToRepoParams,
     lastYearTimeRange,
