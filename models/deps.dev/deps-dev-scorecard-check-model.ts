@@ -4,7 +4,7 @@ export default class DepsDevScorecardCheckModel {
         shortDescription: string;
         url: string;
     };
-    "score": number;
+    "score": string;
     "reason": string;
     "details": string[];
 }

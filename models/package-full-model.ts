@@ -1,3 +1,5 @@
+import DepsDevScorecardCheckModel from "./deps.dev/deps-dev-scorecard-check-model";
+import DepsDevScorecardModel from "./deps.dev/deps-dev-scorecard-model";
 import DownloadsFullModel from "./downloads-full-model";
 import UserModel from "./git/user-model";
 
@@ -59,29 +61,7 @@ export default class PackageFullModel {
         }[];
     };
     security: {
-        scorecard: {
-            repository: {
-                name: string;
-                commit: string;
-            };
-            scorecard: {
-                version: string;
-                commit: string;
-            };
-            checks: {
-                name: string;
-                documentation: {
-                    shortDescription: string;
-                    url: string;
-                };
-                score: number;
-                reason: string;
-                details: string[];
-            }[];
-            overallScore: number;
-            metadata: string[];
-            date: string;
-        };
+        scorecard: DepsDevScorecardModel;
         vulnerabilities: {
             count: number;
         };
@@ -92,6 +72,8 @@ export default class PackageFullModel {
         issuesTracker: string;
         origin: string;
         sourceRepo: string;
+        npm: string;
+        git: string;
     };
     adoption: {
         starsCount: number;

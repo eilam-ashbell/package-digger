@@ -4,6 +4,7 @@ import depsDev from '@/utils/depsDev';
 import npm from '@/utils/npm';
 import osv from '@/utils/osv';
 import { NextRequest, NextResponse } from 'next/server';
+import fs from 'fs'
 
 export async function GET(
     request: NextRequest,
@@ -77,5 +78,10 @@ export async function GET(
     data.vulnerabilities = {
         vulns: vulnerabilities,
     };
+    fs.writeFile("versionInfo.json", JSON.stringify(data), function(err) {
+        if (err) {
+            console.log(err);
+        }
+    });
     return NextResponse.json({ ...data });
 }

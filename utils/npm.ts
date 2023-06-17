@@ -14,146 +14,203 @@ import UnitedDepsModel from '@/models/united/deps-model';
 import { ITimeRange } from '@/models/npm/ITimeRange';
 
 async function getAllPackages(): Promise<Omit<AllPackagesModel, 'doc'>> {
-    const { data } = await axios.get<Omit<AllPackagesModel, 'doc'>>(
-        `https://replicate.npmjs.com/_all_docs`,
-    );
-    return data;
+    try {
+        const { data } = await axios.get<Omit<AllPackagesModel, 'doc'>>(
+            `https://replicate.npmjs.com/_all_docs`,
+        );
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 async function getAllPackagesInfo(): Promise<AllPackagesModel> {
-    const { data } = await axios.get<AllPackagesModel>(
-        `https://replicate.npmjs.com/_all_docs?include_docs=true`,
-    );
-    return data;
+    try {
+        const { data } = await axios.get<AllPackagesModel>(
+            `https://replicate.npmjs.com/_all_docs?include_docs=true`,
+        );
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 async function getPackageInfo(
     packageName: string,
     abbr: boolean = true,
 ): Promise<PackageInfoModel> {
-    const reqConfig = {
-        headers: {
-            Accept: 'application/vnd.npm.install-v1+json',
-        },
-    };
-    const { data } = await axios.get<PackageInfoModel>(
-        `https://registry.npmjs.org/${packageName}`,
-        abbr ? reqConfig : null,
-    );
-    return data;
+    try {
+        const reqConfig = {
+            headers: {
+                Accept: 'application/vnd.npm.install-v1+json',
+            },
+        };
+        const { data } = await axios.get<PackageInfoModel>(
+            `https://registry.npmjs.org/${packageName}`,
+            abbr ? reqConfig : null,
+        );
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 async function getVersionInfo(version: PackageName): Promise<VersionModel> {
-    const { data } = await axios.get<VersionModel>(
-        `https://registry.npmjs.org/${version.name}/${version.version}`,
-    );
-    return data;
+    try {
+        const { data } = await axios.get<VersionModel>(
+            `https://registry.npmjs.org/${version.name}/${version.version}`,
+        );
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 async function getPackageVersions(
     packageInfo: PackageInfoModel | string,
 ): Promise<string[]> {
-    if (typeof packageInfo === 'string') {
-        packageInfo = await getPackageInfo(packageInfo);
+    try {
+        if (typeof packageInfo === 'string') {
+            packageInfo = await getPackageInfo(packageInfo);
+        }
+        const versions = Object.keys(packageInfo.versions);
+        return versions;
+    } catch (err) {
+        console.log(err);
     }
-    const versions = Object.keys(packageInfo.versions);
-    return versions;
 }
 
 async function getPackageLatestVersionInfo(
     packageName: string,
 ): Promise<LatestVersionModel> {
-    const { data } = await axios.get<LatestVersionModel>(
-        `https://registry.npmjs.org/${packageName}/latest`,
-    );
-    return data;
+    try {
+        const { data } = await axios.get<LatestVersionModel>(
+            `https://registry.npmjs.org/${packageName}/latest`,
+        );
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 async function getPackageLatestVersion(packageName: string): Promise<string> {
-    const { data } = await axios.get<LatestVersionModel>(
-        `https://registry.npmjs.org/${packageName}/latest`,
-    );
-    const latest = data.version;
-    return latest;
+    try {
+        const { data } = await axios.get<LatestVersionModel>(
+            `https://registry.npmjs.org/${packageName}/latest`,
+        );
+        const latest = data.version;
+        return latest;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 async function getPackageDownloadLink(
     versionInfo: VersionModel | PackageName,
 ): Promise<string> {
-    if (!(versionInfo instanceof VersionModel)) {
-        versionInfo = await getVersionInfo(versionInfo);
+    try {
+        if (!(versionInfo instanceof VersionModel)) {
+            versionInfo = await getVersionInfo(versionInfo);
+        }
+        const link = (versionInfo as VersionModel)?.dist?.tarball;
+        return link;
+    } catch (err) {
+        console.log(err);
     }
-    const link = (versionInfo as VersionModel)?.dist?.tarball;
-    return link;
 }
 
 async function getPackageDependencies(
     versionInfo: VersionModel | PackageName,
 ): Promise<Pick<VersionModel, 'dependencies' | 'devDependencies'>> {
-    if (!(versionInfo instanceof VersionModel)) {
-        versionInfo = await getVersionInfo(versionInfo);
+    try {
+        if (!(versionInfo instanceof VersionModel)) {
+            versionInfo = await getVersionInfo(versionInfo);
+        }
+        const deps = {
+            dependencies: (versionInfo as VersionModel).dependencies,
+            devDependencies: (versionInfo as VersionModel).devDependencies,
+        };
+        return deps;
+    } catch (err) {
+        console.log(err);
     }
-    const deps = {
-        dependencies: (versionInfo as VersionModel).dependencies,
-        devDependencies: (versionInfo as VersionModel).devDependencies,
-    };
-    return deps;
 }
 
 async function getPackageTimes(
     packageInfo: PackageInfoModel | string,
 ): Promise<PackageTimeModel> {
-    if (typeof packageInfo === 'string') {
-        packageInfo = await getPackageInfo(packageInfo, false);
+    try {
+        if (typeof packageInfo === 'string') {
+            packageInfo = await getPackageInfo(packageInfo, false);
+        }
+        const times = packageInfo.time;
+        return times;
+    } catch (err) {
+        console.log(err);
     }
-    const times = packageInfo.time;
-    return times;
 }
 
 async function getPackageVersionsDownloads(
     packageName: string,
 ): Promise<PackageVersionsDownloadsModel> {
-    const { data } = await axios.get<PackageVersionsDownloadsModel>(
-        `https://api.npmjs.org/versions/${packageName}/last-week`,
-    );
-    return data;
+    try {
+        const { data } = await axios.get<PackageVersionsDownloadsModel>(
+            `https://api.npmjs.org/versions/${packageName}/last-week`,
+        );
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 async function getPackageRangeDownloads(
     packageName: string,
     timeRange: ITimeRange | 'last-day' | 'last-week' | 'last-month',
 ): Promise<PackageDownloadModel> {
-    const { data } = await axios.get<PackageDownloadModel>(
-        `https://api.npmjs.org/downloads/range/${timeRange}/${packageName}`,
-        {
-            headers: {
-                'Cache-Control': 'no-cache',
+    try {
+        const { data } = await axios.get<PackageDownloadModel>(
+            `https://api.npmjs.org/downloads/range/${timeRange}/${packageName}`,
+            {
+                headers: {
+                    'Cache-Control': 'no-cache',
+                },
             },
-        },
-    );
-    return data;
+        );
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 async function getPackagePointDownloads(
     packageName: string,
     timeRange: 'last-day' | 'last-week' | 'last-month' | ITimeRange,
 ): Promise<PackageDownloadModel> {
-    const { data } = await axios.get<PackageDownloadModel>(
-        `https://api.npmjs.org/downloads/point/${timeRange}/${packageName}`,
-    );
-    return data;
+    try {
+        const { data } = await axios.get<PackageDownloadModel>(
+            `https://api.npmjs.org/downloads/point/${timeRange}/${packageName}`,
+        );
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 async function searchPackageName(
     packageName: string,
     size: number,
 ): Promise<SearchPackageResultsModel[]> {
-    const { data } = await axios.get<{ objects: SearchPackageResultsModel[] }>(
-        `https://registry.npmjs.org/-/v1/search`,
-        { params: { text: packageName, size: size } },
-    );
-    const packages = data.objects;
-    return packages;
+    try {
+        const { data } = await axios.get<{
+            objects: SearchPackageResultsModel[];
+        }>(`https://registry.npmjs.org/-/v1/search`, {
+            params: { text: packageName, size: size },
+        });
+        const packages = data.objects;
+        return packages;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 export default {

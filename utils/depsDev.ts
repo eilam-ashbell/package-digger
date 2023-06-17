@@ -16,10 +16,14 @@ async function getPackage(
     packageName: string,
     packageSystem: IDepsDevSystem,
 ): Promise<DepsDevPackageModel> {
-    const { data } = await depsDev.get<DepsDevPackageModel>(
-        `systems/${packageSystem}/packages/${packageName}`,
-    );
-    return data;
+    try {
+        const { data } = await depsDev.get<DepsDevPackageModel>(
+            `systems/${packageSystem}/packages/${packageName}`,
+        );
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 async function getVersion(
@@ -27,10 +31,14 @@ async function getVersion(
     packageSystem: IDepsDevSystem,
     packageVersion: string,
 ): Promise<DepsDevVersionInfoModel> {
-    const { data } = await depsDev.get<DepsDevVersionInfoModel>(
-        `systems/${packageSystem}/packages/${packageName}/versions/${packageVersion}`,
-    );
-    return data;
+    try {
+        const { data } = await depsDev.get<DepsDevVersionInfoModel>(
+            `systems/${packageSystem}/packages/${packageName}/versions/${packageVersion}`,
+        );
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 async function getDependencies(
@@ -38,27 +46,39 @@ async function getDependencies(
     packageSystem: IDepsDevSystem,
     packageVersion: string,
 ): Promise<DepsDevDependenciesModel> {
-    const { data } = await depsDev.get<DepsDevDependenciesModel>(
-        `systems/${packageSystem}/packages/${packageName}/versions/${packageVersion}:dependencies`,
-    );
-    return data;
+    try {
+        const { data } = await depsDev.get<DepsDevDependenciesModel>(
+            `systems/${packageSystem}/packages/${packageName}/versions/${packageVersion}:dependencies`,
+        );
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 async function getProject(repoUrl: string): Promise<DepsDevProjectModel> {
-    const [owner, repo] = convert.gitUrlToRepoParams(repoUrl);
-    const { data } = await depsDev.get<DepsDevProjectModel>(
-        `projects/github.com%2F${owner}%2F${repo}`,
-    );
-    return data;
+    try {
+        const [owner, repo] = convert.gitUrlToRepoParams(repoUrl);
+        const { data } = await depsDev.get<DepsDevProjectModel>(
+            `projects/github.com%2F${owner}%2F${repo}`,
+        );
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 async function getAdvisory(
     advisoryKeyId: string,
 ): Promise<DepsDevAdvisoryModel> {
-    const { data } = await depsDev.get<DepsDevAdvisoryModel>(
-        `advisories/${advisoryKeyId}`,
-    );
-    return data;
+    try {
+        const { data } = await depsDev.get<DepsDevAdvisoryModel>(
+            `advisories/${advisoryKeyId}`,
+        );
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 async function getQuery(queryParams: {
@@ -68,10 +88,14 @@ async function getQuery(queryParams: {
     'versionKey.name'?: string;
     'versionKey.version'?: string;
 }): Promise<DepsDevQueryModel> {
-    const { data } = await depsDev.get<DepsDevQueryModel>(`query`, {
-        params: queryParams,
-    });
-    return data;
+    try {
+        const { data } = await depsDev.get<DepsDevQueryModel>(`query`, {
+            params: queryParams,
+        });
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 export default {

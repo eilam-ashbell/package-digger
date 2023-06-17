@@ -8,6 +8,7 @@ import osv from '@/utils/osv';
 import dayjs from 'dayjs';
 import { NextRequest, NextResponse } from 'next/server';
 import { format } from 'util';
+import fs from 'fs';
 
 export async function GET(
     request: NextRequest,
@@ -28,7 +29,7 @@ export async function GET(
     const gitRepoLanguages = await git.getLanguages(gitRepoInfo.git_url);
     const gitRepoContributors = await git.getContributors(
         gitRepoInfo.contributors_url,
-        4,
+        100,
     );
     const gitRepoContributorsInfo = await git.getContributorsInfo(
         gitRepoContributors,
@@ -79,9 +80,7 @@ export async function GET(
         },
         repo: {
             url:
-                npmPackageInfo.repository.type === 'git'
-                    ? npmPackageInfo.repository.url
-                    : 'Not provided',
+                gitRepoInfo.html_url,
             name: repo,
             owner: owner,
             contributors: gitRepoContributorsInfoUnit,
@@ -121,8 +120,10 @@ export async function GET(
         homepage: npmPackageInfo.homepage,
         documentation: '',
         issuesTracker: npmPackageInfo.bugs.url,
-        sourceRepo: npmPackageInfo.repository.url,
+        sourceRepo: npmPackageInfo.repository.url.split('http://')[1],
         origin: '',
+        npm: `https://www.npmjs.com/package/${packageName}`,
+        git: gitRepoInfo.html_url
     };
     data.adoption = {
         starsCount: gitRepoInfo.stargazers_count,
@@ -140,5 +141,10 @@ export async function GET(
             perVersion: perVersionParsed,
         },
     };
+    fs.writeFile('packageInfo.json', JSON.stringify(data), function (err) {
+        if (err) {
+            console.log(err);
+        }
+    });
     return NextResponse.json({ ...data });
 }
