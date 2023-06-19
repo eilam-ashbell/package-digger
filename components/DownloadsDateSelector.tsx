@@ -16,7 +16,7 @@ export function DownloadsDateSelector({ passDates }) {
 
     return (
         <DateRangePicker
-            className="max-w-md mx-auto"
+            className="mx-auto my-2"
             value={dates}
             onValueChange={setDates}
             locale={enUS}

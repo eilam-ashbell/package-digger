@@ -85,9 +85,6 @@ async function getContributors(
             });
             const dataLength = data.length;
             data.push(...res.data);
-            console.log(`old data: ${dataLength}`);
-            console.log(`data: ${data.length}`);
-
             if (dataLength === data.length) break;
         }
         return data.slice(0, max);

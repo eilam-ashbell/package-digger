@@ -1,18 +1,17 @@
 import UserModel from '@/models/git/user-model';
-import { LocationMarkerIcon } from '@heroicons/react/solid';
+import { LocationMarkerIcon, ExternalLinkIcon } from '@heroicons/react/solid';
 import * as React from 'react';
 import abbreviate from 'number-abbreviate';
 import Link from 'next/link';
+import SectionTitle from './SectionTitle';
 
 interface ITopContributors {
     contributors: UserModel[];
 }
 export default function TopContributors({ contributors }: ITopContributors) {
     return (
-        <div className='flex flex-col flex-wrap divide-y'>
-            <h2 className='text-lg text-gray-700 font-medium pb-2'>
-                Top Contributors
-            </h2>
+        <div className='flex flex-col flex-wrap divide-y divide-y-reverse'>
+            <SectionTitle title='Contributors' />
             {contributors.map((c) => (
                 <div className='flex flex-row gap-x-4  py-4'>
                     <img
@@ -23,9 +22,14 @@ export default function TopContributors({ contributors }: ITopContributors) {
                         <Link
                             href={c.html_url}
                             target='_blank'
-                            className='underline'
                         >
                             <span>{c.name}</span>
+                            <ExternalLinkIcon
+                                strokeWidth={1.5}
+                                width={20}
+                                color='current'
+                                className='inline ml-1 mb-1 text-slate-400'
+                            />
                         </Link>
                         <div className='flex flex-row gap-x-2 items-center'>
                             <div className='w-4 text-gray-400'>
@@ -38,18 +42,26 @@ export default function TopContributors({ contributors }: ITopContributors) {
                         <Link
                             href={`${c.html_url}?tab=followers`}
                             target='_blank'
-                            className='underline'
                         >
-                            <span>Followers: </span>
-                            <span>{abbreviate(c.followers, 1)}</span>
+                            <span>Followers: {abbreviate(c.followers, 1)}</span>
+                            <ExternalLinkIcon
+                                strokeWidth={1.5}
+                                width={20}
+                                color='current'
+                                className='inline ml-1 mb-1 text-slate-400'
+                            />
                         </Link>
                         <Link
                             href={`${c.html_url}?tab=repositories`}
                             target='_blank'
-                            className='underline'
                         >
-                            <span>Repos: </span>
-                            <span>{abbreviate(c.public_repos, 1)}</span>
+                            <span>Repos: {abbreviate(c.public_repos, 1)}</span>
+                            <ExternalLinkIcon
+                                strokeWidth={1.5}
+                                width={20}
+                                color='current'
+                                className='inline ml-1 mb-1 text-slate-400'
+                            />
                         </Link>
                     </div>
                 </div>

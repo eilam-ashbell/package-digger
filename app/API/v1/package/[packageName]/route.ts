@@ -29,7 +29,7 @@ export async function GET(
     const gitRepoLanguages = await git.getLanguages(gitRepoInfo.git_url);
     const gitRepoContributors = await git.getContributors(
         gitRepoInfo.contributors_url,
-        100,
+        4,
     );
     const gitRepoContributorsInfo = await git.getContributorsInfo(
         gitRepoContributors,
@@ -79,8 +79,7 @@ export async function GET(
             lastModified: npmPackageInfo.time.modified,
         },
         repo: {
-            url:
-                gitRepoInfo.html_url,
+            url: gitRepoInfo.html_url,
             name: repo,
             owner: owner,
             contributors: gitRepoContributorsInfoUnit,
@@ -123,7 +122,7 @@ export async function GET(
         sourceRepo: npmPackageInfo.repository.url.split('http://')[1],
         origin: '',
         npm: `https://www.npmjs.com/package/${packageName}`,
-        git: gitRepoInfo.html_url
+        git: gitRepoInfo.html_url,
     };
     data.adoption = {
         starsCount: gitRepoInfo.stargazers_count,

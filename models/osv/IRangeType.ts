@@ -1,1 +1,1 @@
-export type IRangeType = "SEMVER" | "ECOSYSTEM" | "GIT";
+export type IRangeType = 'SEMVER' | 'ECOSYSTEM' | 'GIT';

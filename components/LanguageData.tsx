@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { BarList, Card, Title, Bold, Flex, Text } from '@tremor/react';
+import SectionTitle from './SectionTitle';
 
 interface ILanguages {
     languages: Record<string, number>;
@@ -34,14 +35,10 @@ export default function LanguageData(langs: ILanguages) {
     }
     return (
         <div>
-            <div className='flex flex-row justify-between'>
-                <h2 className='text-lg text-gray-700 font-medium pb-2'>
-                    Languages
-                </h2>
-                <span className='text-lg text-gray-700 font-medium pb-2'>
-                    {Object.keys(languages).length}
-                </span>
-            </div>
+            <SectionTitle
+                title='Languages'
+                subTitle={Object.keys(languages).length}
+            />
             <BarList
                 data={data}
                 className='mt-2'

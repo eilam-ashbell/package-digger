@@ -1,40 +1,45 @@
-import DistModel from '@/models/npm/dist-model';
 import VersionFullModel from '@/models/version-full-model';
 import { Button } from '@tremor/react';
-import { Card, Bold, Text } from '@tremor/react';
 import Link from 'next/link';
-import * as React from 'react';
+import SectionTitle from './SectionTitle';
+import CopyBox from './CopyBox';
+import KeyDataBar from './KeyDataBar';
 
-
-export default function DistCard(dist: Pick<VersionFullModel, 'dist'>) {
-    const { fileCount, unpackedSize, shasum, tarball } = dist.dist
+interface IDistSection {
+    packageVersion?: string;
+    dist: Pick<VersionFullModel, 'dist'>;
+}
+export default function DistCard({ dist, packageVersion }: IDistSection) {
+    const { fileCount, unpackedSize, shasum, tarball } = dist.dist;
     return (
         <div className='flex flex-col justify-between h-full'>
-            <div className='flex flex-col gap-y-2 divide-y' >
-                <Text className='flex flex row justify-between pt-2'>
-                    <Bold className='text-slate-400'>
-                        {`FileCount: `}
-                    </Bold>
-                    {fileCount}
-                </Text>
-                <Text className='flex flex row justify-between pt-2'>
-                    <Bold className='text-slate-400'>
-                        {`Unpacked size: `}
-                    </Bold>
-                    {unpackedSize / 1000} kb
-                </Text>
-                <Text className='flex flex row justify-between pt-2 text-ellipsis overflow-hidden whitespace-nowrap '>
-                    <Bold className='text-slate-400'>
-                        {`SHA sum: `}
-                    </Bold>
-                    {shasum}
-                </Text>
+            <SectionTitle
+                title='Dist'
+                subTitle={'v' + packageVersion}
+            />
+                    <div className='flex flex-col gap-y-2'>
+            <KeyDataBar
+                data={[
+                    { title: 'file count', value: fileCount },
+                    {
+                        title: 'unpacked size',
+                        value: `${unpackedSize / 1000} kb`,
+                    },
+                ]}
+            />
+                <CopyBox text={shasum} title='SHA:' />
             </div>
-            <Link href={tarball} className='mt-4'>
-                <Button size='xs' className='w-full' >
+            <Link
+                href={tarball}
+                className='mt-4'
+            >
+                <Button
+                    size='lg'
+                    className='w-full'
+                >
                     Download Source
                 </Button>
             </Link>
         </div>
-    )
+    );
 }
