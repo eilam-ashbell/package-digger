@@ -68,76 +68,76 @@ export async function GET(
         publishedAt: v.publishedAt,
         isDefault: v.isDefault,
     }));
-    data.name = packageName;
+    data.name = packageName || null;
     data.ecosystem = 'npm';
-    data.description = npmPackageInfo.description;
+    data.description = npmPackageInfo.description || null;
     data.metadata = {
         package: {
-            author: npmPackageInfo.author,
-            contributors: npmPackageInfo.contributors,
-            created: npmPackageInfo.time.created,
-            lastModified: npmPackageInfo.time.modified,
+            author: npmPackageInfo.author || null,
+            contributors: npmPackageInfo.contributors || null,
+            created: npmPackageInfo.time.created || null,
+            lastModified: npmPackageInfo.time.modified || null,
         },
         repo: {
-            url: gitRepoInfo.html_url,
-            name: repo,
-            owner: owner,
-            contributors: gitRepoContributorsInfoUnit,
+            url: gitRepoInfo.html_url || null,
+            name: repo || null,
+            owner: owner || null,
+            contributors: gitRepoContributorsInfoUnit || null,
             author: {
-                username: gitRepoUser.login,
-                email: gitRepoUser.email,
-                pageUrl: gitRepoUser.html_url,
-                avatarUrl: gitRepoUser.avatar_url,
-                type: gitRepoUser.type,
-                location: gitRepoUser.location,
-                bio: gitRepoUser.bio,
-                reposCount: gitRepoUser.public_repos,
-                followersCount: gitRepoUser.followers,
-                followingCount: gitRepoUser.following,
-                createdAt: gitRepoUser.created_at,
+                username: gitRepoUser.login || null,
+                email: gitRepoUser.email || null,
+                pageUrl: gitRepoUser.html_url || null,
+                avatarUrl: gitRepoUser.avatar_url || null,
+                type: gitRepoUser.type || null,
+                location: gitRepoUser.location || null,
+                bio: gitRepoUser.bio || null,
+                reposCount: gitRepoUser.public_repos || null,
+                followersCount: gitRepoUser.followers || null,
+                followingCount: gitRepoUser.following || null,
+                createdAt: gitRepoUser.created_at || null,
             },
-            createdAt: gitRepoInfo.created_at,
-            lastModified: gitRepoInfo.updated_at,
+            createdAt: gitRepoInfo.created_at || null,
+            lastModified: gitRepoInfo.updated_at || null,
         },
-        license: npmPackageInfo.license,
-        keywords: npmPackageInfo.keywords,
-        languages: gitRepoLanguages,
+        license: npmPackageInfo.license || null,
+        keywords: npmPackageInfo.keywords || [],
+        languages: gitRepoLanguages || null,
     };
     data.versions = {
-        current: npmPackageInfo['dist-tags'].latest,
+        current: npmPackageInfo['dist-tags'].latest || null,
         next: npmPackageInfo['dist-tags'].next || null,
         count: tags?.length || 0,
-        tags: tags,
+        tags: tags || null,
     };
     data.security = {
-        scorecard: depsDevProjectInfo.scorecard,
-        vulnerabilities: {
-            count: vulns?.length || 0,
-        },
+        scorecard: depsDevProjectInfo.scorecard || null,
+        // vulnerabilities: {
+        //     count: vulns?.length || 0,
+        // },
     };
     data.links = {
-        homepage: npmPackageInfo.homepage,
-        documentation: '',
-        issuesTracker: npmPackageInfo.bugs.url,
-        sourceRepo: npmPackageInfo.repository.url.split('http://')[1],
-        origin: '',
-        npm: `https://www.npmjs.com/package/${packageName}`,
-        git: gitRepoInfo.html_url,
+        homepage: npmPackageInfo.homepage || null,
+        documentation: '' || null,
+        issuesTracker: npmPackageInfo.bugs.url || null,
+        sourceRepo: npmPackageInfo.repository.url.split('http://')[1] || null,
+        origin: '' || null,
+        npm: `https://www.npmjs.com/package/${packageName}` || null,
+        git: gitRepoInfo.html_url || null,
     };
     data.adoption = {
-        starsCount: gitRepoInfo.stargazers_count,
-        forksCount: gitRepoInfo.forks_count,
-        openIssues: gitRepoInfo.open_issues_count,
-        watchers: gitRepoInfo.watchers_count,
+        starsCount: gitRepoInfo.stargazers_count || null,
+        forksCount: gitRepoInfo.forks_count || null,
+        openIssues: gitRepoInfo.open_issues_count || null,
+        watchers: gitRepoInfo.watchers_count || null,
         downloads: {
-            startDate: range.start,
-            endDate: range.end,
-            point: total.downloads as number,
-            range: range.downloads as {
-                downloads: number;
-                day: string;
-            }[],
-            perVersion: perVersionParsed,
+            startDate: range.start || null,
+            endDate: range.end || null,
+            point: total.downloads as number || null,
+            // range: range.downloads as {
+            //     downloads: number;
+            //     day: string;
+            // }[] || null,
+            perVersion: perVersionParsed || null,
         },
     };
     fs.writeFile('packageInfo.json', JSON.stringify(data), function (err) {

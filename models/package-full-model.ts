@@ -43,10 +43,7 @@ export default class PackageFullModel {
         };
         license: string;
         keywords: string[];
-        // unpackedSize: number; // -> version
-        // fileCount: number; // -> version
         languages: Record<string, number>;
-        // engine: Record<string, string>; // -> version
     };
     versions: {
         current: string;
@@ -57,14 +54,13 @@ export default class PackageFullModel {
             tag: string;
             publishedAt: string;
             isDefault: boolean;
-            // isDeprecated: boolean;
         }[];
     };
     security: {
         scorecard: DepsDevScorecardModel;
-        vulnerabilities: {
-            count: number;
-        };
+        // vulnerabilities: {
+        //     count: number;
+        // };
     };
     links: {
         homepage: string;

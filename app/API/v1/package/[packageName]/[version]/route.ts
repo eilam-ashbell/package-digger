@@ -48,23 +48,29 @@ export async function GET(
         .map((d) => [[d.versionKey.name], d.versionKey.version]);
 
     const dep = Object.fromEntries(indirect);              
-    data.name = convert.fromUrl(npmVersionInfo.name);
-    data.tag = params.version;
-    data.fullName = npmVersionInfo._id;
-    data.ecosystem = 'npm';
-    data.description = npmVersionInfo.description;
-    data.contributors = npmVersionInfo.contributors;
+    data.name = convert.fromUrl(npmVersionInfo.name) || null;
+    data.tag = params.version || null;
+    data.fullName = npmVersionInfo._id || null;
+    data.ecosystem = 'npm' || null;
+    // data.description = npmVersionInfo.description || null;
+    // data.contributors = npmVersionInfo.contributors || null;
     data.dist = {
-        ...npmVersionInfo.dist,
-        engine: npmVersionInfo.engines,
+        integrity: npmVersionInfo.dist.integrity || null,
+        shasum: npmVersionInfo.dist.shasum || null,
+        tarball: npmVersionInfo.dist.tarball || null,
+        fileCount: npmVersionInfo.dist.fileCount || null,
+        unpackedSize: npmVersionInfo.dist.unpackedSize || null,
+        signatures: npmVersionInfo.dist.signatures || null,
+        // ...npmVersionInfo.dist,
+        engine: npmVersionInfo.engines || null,
     };
-    data.publishedAt = depsDevVersionInfo.publishedAt;
-    data.isDefault = depsDevVersionInfo.isDefault;
-    data.advisoryKeys = depsDevVersionInfo.advisoryKeys;
+    data.publishedAt = depsDevVersionInfo.publishedAt || null;
+    data.isDefault = depsDevVersionInfo.isDefault || null;
+    data.advisoryKeys = depsDevVersionInfo.advisoryKeys || null;
     data.dependencies = {
-        direct: directDeps,
-        dev: devDeps,
-        inDirect: dep,
+        direct: directDeps || null,
+        dev: devDeps || null,
+        inDirect: dep || null,
         count: {
             direct: npmVersionInfo.dependencies
                 ? Object.keys(npmVersionInfo.dependencies).length
@@ -76,7 +82,7 @@ export async function GET(
         },
     };
     data.vulnerabilities = {
-        vulns: vulnerabilities,
+        vulns: vulnerabilities || [],
     };
     fs.writeFile("versionInfo.json", JSON.stringify(data), function(err) {
         if (err) {

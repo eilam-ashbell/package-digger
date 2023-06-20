@@ -20,7 +20,7 @@ export default function DistCard({ dist, packageVersion }: IDistSection) {
                     <div className='flex flex-col gap-y-2'>
             <KeyDataBar
                 data={[
-                    { title: 'file count', value: fileCount },
+                    { title: 'file count', value: fileCount || 'unknown' },
                     {
                         title: 'unpacked size',
                         value: `${unpackedSize / 1000} kb`,

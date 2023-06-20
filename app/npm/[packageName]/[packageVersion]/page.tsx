@@ -1,29 +1,18 @@
 import DependenciesCard from '@/components/DependenciesCard';
-import { Card, Badge } from '@tremor/react';
-import * as React from 'react';
+import { Card } from '@tremor/react';
 import LanguageData from '@/components/LanguageData';
 import abbreviate from 'number-abbreviate';
-import Image from 'next/image';
 import Adoption from '@/components/Adoption';
 import packageInfoJson from '@/packageInfo.json';
 import versionInfoJson from '@/versionInfo.json';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import {
-    DocumentDuplicateIcon,
-    LocationMarkerIcon,
-} from '@heroicons/react/outline';
-import githubIcon from '@/public/githubMark.svg';
-import npmIcon from '@/public/npmMark.svg';
-import Link from 'next/link';
 import KeyDataBar from '@/components/KeyDataBar';
-import KeyWordsList from '@/components/KeyWordsList';
 import ScorecardTable from '@/components/ScorecardTable';
 import TopContributors from '@/components/TopContributors';
 import PackageIntro from '@/components/PackageIntro';
 import DistCard from '@/components/DistCard';
 import CopyBox from '@/components/CopyBox';
-import VersionsInfo from '@/components/VersionsInfo';
 import axios from 'axios';
 import PackageFullModel from '@/models/package-full-model';
 import VersionFullModel from '@/models/version-full-model';
@@ -33,7 +22,7 @@ import OsvVulnerabilityModel from '@/models/osv/vulnerability-model';
 export default async function page({ params }) {
     dayjs.extend(relativeTime);
     const { packageName, packageVersion } = params;
-    const online = false;
+    const online = 0;
 
     if (online) {
         const packageInfo = (
@@ -78,7 +67,7 @@ export default async function page({ params }) {
     ];
     return (
         <>
-            <Card className='grid grid-cols-6 gap-x-10 gap-y-7 text-gray-700 font-light'>
+            <Card className='grid grid-cols-6 gap-x-8 gap-y-7 text-gray-700 font-light'>
                 <div className='col-span-6 h-fit'>
                     <KeyDataBar data={keyData} />
                 </div>
@@ -87,11 +76,11 @@ export default async function page({ params }) {
                         currentVersion={packageInfo.versions.current}
                         publishedTime={versionInfo.publishedAt}
                         packageName={packageInfo.name}
-                        authorName={packageInfo.metadata.package.author.name}
+                        authorName={packageInfo.metadata.package?.author?.name}
                         gitUrl={packageInfo.links.git}
                         npmUrl={packageInfo.links.npm}
                         description={packageInfo.description}
-                        keywords={packageInfo.metadata.keywords}
+                        keywords={packageInfo.metadata?.keywords}
                     />
 
                     <Adoption {...packageInfo} />

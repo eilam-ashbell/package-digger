@@ -1,4 +1,4 @@
-import PersonModel from "./npm/person-model";
+// import PersonModel from "./npm/person-model";
 import OsvVulnerabilityModel from "./osv/vulnerability-model";
 
 export default class VersionFullModel {
@@ -6,8 +6,8 @@ export default class VersionFullModel {
     tag: string;
     fullName: string;
     ecosystem: string;
-    description: string;
-    contributors: PersonModel[];
+    // description: string;
+    // contributors: PersonModel[];
     dist: {
         integrity?: string;
         shasum: string;

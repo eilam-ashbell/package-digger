@@ -38,7 +38,9 @@ export default function PackageIntro({
                         <h1 className='text-4xl text-gray-900'>
                             {packageName}
                         </h1>
-                        <span className='ml-4 text-sm text-gray-400 mb-1'>{`by ${authorName}`}</span>
+                        {authorName && (
+                            <span className='ml-4 text-sm text-gray-400 mb-1'>{`by ${authorName}`}</span>
+                        )}
                     </div>
                     <div className='flex flex-row gap-x-2 pt-2 px-6'>
                         <Link

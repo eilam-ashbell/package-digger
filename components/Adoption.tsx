@@ -32,11 +32,11 @@ export default function Adoption(data: Pick<PackageFullModel, 'adoption'>) {
     );
     const [point, setPoint] = useState<number>(0);
     const [range, setRange] = useState<{ downloads: number; day: string }[]>(
-        data.adoption.downloads.range,
+        
     );
     const [perVersion, setPerVersion] = useState<
         Pick<DownloadsFullModel, 'perVersion'>
-    >(data.adoption.downloads);
+    >(downloads);
     const [tabNumber, setTabNumber] = useState('1');
 
     function getDates(dates: ITimeRange) {

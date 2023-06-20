@@ -14,7 +14,7 @@ export default function VulnerabilitiesSection({
         <div>
             <SectionTitle
                 title='Vulnerabilities'
-                subTitle={vulns?.length}
+                subTitle={vulns?.length || '0'}
             />
             <div className='flex flex-col'>
                 <div className='divide-y flex flex-col'>
