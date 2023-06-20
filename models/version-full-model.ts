@@ -1,5 +1,6 @@
 // import PersonModel from "./npm/person-model";
-import OsvVulnerabilityModel from "./osv/vulnerability-model";
+import DependenciesFullModel from './dependencies-full-model';
+import OsvVulnerabilityModel from './osv/vulnerability-model';
 
 export default class VersionFullModel {
     name: string;
@@ -26,16 +27,7 @@ export default class VersionFullModel {
     publishedAt: string;
     isDefault: boolean;
     advisoryKeys: string[];
-    dependencies: {
-        direct: Record<string, string> | null;
-        inDirect: Record<string, string> | null;
-        dev: Record<string, string> | null ;
-        count: {
-            direct: number;
-            inDirect: number;
-            dev: number;
-        };
-    };
+    dependencies: DependenciesFullModel;
     vulnerabilities: {
         vulns: OsvVulnerabilityModel[];
     };

@@ -30,7 +30,7 @@ export async function GET(
         ? Object.fromEntries(
               Object.entries(npmVersionInfo.dependencies).map((d) => [
                   d[0],
-                  d[1].replace(/^[^\d]+/, ''),
+                  d[1].replace(/^[^\d]+/, '').split(' ')[0],
               ]),
           )
         : null;
@@ -38,7 +38,7 @@ export async function GET(
         ? Object.fromEntries(
               Object.entries(npmVersionInfo.devDependencies).map((d) => [
                   d[0],
-                  d[1].replace(/^[^\d]+/, ''),
+                  d[1].replace(/^[^\d]+/, '').split(' ')[0],
               ]),
           )
         : null;
@@ -70,7 +70,7 @@ export async function GET(
     data.dependencies = {
         direct: directDeps || null,
         dev: devDeps || null,
-        inDirect: dep || null,
+        indirect: dep || null,
         count: {
             direct: npmVersionInfo.dependencies
                 ? Object.keys(npmVersionInfo.dependencies).length
@@ -78,7 +78,7 @@ export async function GET(
             dev: npmVersionInfo.devDependencies
                 ? Object.keys(npmVersionInfo.devDependencies).length
                 : 0,
-            inDirect: dep ? Object.keys(dep).length : 0,
+            indirect: dep ? Object.keys(dep).length : 0,
         },
     };
     data.vulnerabilities = {

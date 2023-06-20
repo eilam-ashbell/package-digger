@@ -12,7 +12,7 @@ interface IDependenciesSection {
 }
 export default function DependenciesCard({ deps, packageVersion }) {
     const [tabNumber, setTabNumber] = useState('1');
-    const { direct, inDirect, dev } = deps;
+    const { direct, indirect, dev } = deps;
 
     return (
         <div>
@@ -41,7 +41,7 @@ export default function DependenciesCard({ deps, packageVersion }) {
                         <Tab
                             value='3'
                             text={`Indirect (${
-                                (inDirect && Object.entries(inDirect).length) ||
+                                (indirect && Object.entries(indirect).length) ||
                                 0
                             })`}
                         />
@@ -68,9 +68,9 @@ export default function DependenciesCard({ deps, packageVersion }) {
                             ))}
                         </div>
                     )}
-                    {tabNumber === '3' && inDirect && (
+                    {tabNumber === '3' && indirect && (
                         <div className='h-60 overflow-y-scroll'>
-                            {Object.entries(inDirect).map((d, i) => (
+                            {Object.entries(indirect).map((d, i) => (
                                 <DependencyListItem
                                     key={i}
                                     depItem={d as [string, string]}
