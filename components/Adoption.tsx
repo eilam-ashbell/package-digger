@@ -19,8 +19,11 @@ import dayjs from 'dayjs';
 import DownloadsFullModel from '@/models/downloads-full-model';
 import KeyDataBar from './KeyDataBar';
 import SectionTitle from './SectionTitle';
+import { useParams } from 'next/navigation';
 
 export default function Adoption(data: Pick<PackageFullModel, 'adoption'>) {
+    const params = useParams();
+    const packageName = params.packageName;
     const { starsCount, forksCount, watchers, openIssues, downloads } =
         data.adoption;
     const [dateQuery, setDateQuery] = useState<ITimeRange>(
@@ -31,12 +34,9 @@ export default function Adoption(data: Pick<PackageFullModel, 'adoption'>) {
         ]),
     );
     const [point, setPoint] = useState<number>(0);
-    const [range, setRange] = useState<{ downloads: number; day: string }[]>(
-        
-    );
-    const [perVersion, setPerVersion] = useState<
-        Pick<DownloadsFullModel, 'perVersion'>
-    >(downloads);
+    const [range, setRange] = useState<{ downloads: number; day: string }[]>();
+    const [perVersion, setPerVersion] =
+        useState<Pick<DownloadsFullModel, 'perVersion'>>(downloads);
     const [tabNumber, setTabNumber] = useState('1');
 
     function getDates(dates: ITimeRange) {
@@ -45,7 +45,7 @@ export default function Adoption(data: Pick<PackageFullModel, 'adoption'>) {
 
     async function getDownloadsData() {
         const { data } = await axios.get(
-            `http://localhost:3000/API/v1/downloads?dates=${dateQuery}&package=express`,
+            `http://localhost:3000/API/v1/package/${packageName}/downloads?dates=${dateQuery}&package=express`,
         );
         // setPoint(data.point)
         setRange(data.range);
@@ -86,21 +86,21 @@ export default function Adoption(data: Pick<PackageFullModel, 'adoption'>) {
                 />
             </TabList>
             {tabNumber === '1' && (
-                    <div className='mt-4'>
-                        <DownloadsDateSelector
-                            passDates={getDates}
-                        ></DownloadsDateSelector>
-                        <AreaChart
-                            // className="w-auto"
-                            data={range}
-                            index='day'
-                            categories={['downloads']}
-                            colors={['blue']}
-                            yAxisWidth={60}
-                            curveType='natural'
-                            valueFormatter={dataFormatter}
-                        />
-                    </div>
+                <div className='mt-4'>
+                    <DownloadsDateSelector
+                        passDates={getDates}
+                    ></DownloadsDateSelector>
+                    <AreaChart
+                        // className="w-auto"
+                        data={range}
+                        index='day'
+                        categories={['downloads']}
+                        colors={['blue']}
+                        yAxisWidth={60}
+                        curveType='natural'
+                        valueFormatter={dataFormatter}
+                    />
+                </div>
             )}
             {tabNumber === '2' && (
                 <div className=''>

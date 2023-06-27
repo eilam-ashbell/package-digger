@@ -5,15 +5,39 @@ import { DownloadIcon } from '@heroicons/react/solid';
 import DependencyListItem from './DependencyListItem';
 import VersionFullModel from '@/models/version-full-model';
 import SectionTitle from './SectionTitle';
-
+import axios from 'axios';
+import { useParams } from 'next/navigation';
+import fileDownload from 'js-file-download';
 interface IDependenciesSection {
     deps: Pick<VersionFullModel, 'dependencies'>;
     packageVersion: string;
 }
+
+type ScopeType = 'all' | 'direct' | 'indirect' | 'dev';
+
 export default function DependenciesCard({ deps, packageVersion }) {
     const [tabNumber, setTabNumber] = useState('1');
     const { direct, indirect, dev } = deps;
-
+    const params = useParams();
+    const packageName = params.packageName;
+    // handle click for downloading deps
+    async function handleClick(scope: ScopeType) {
+        axios
+            .post(
+                `http://localhost:3000/API/v1/get_pkgs/?packageName=${packageName}&version=${packageVersion}&scope=${scope}`,
+                deps,
+                {
+                    responseType: 'blob',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                },
+            )
+            .then((res) => {
+                // download the file on client side
+                fileDownload(res.data, `${packageName}-${scope}.zip`);
+            });
+    }
     return (
         <div>
             <SectionTitle
@@ -85,7 +109,7 @@ export default function DependenciesCard({ deps, packageVersion }) {
                         variant='primary'
                         className='w-1/4'
                         icon={DownloadIcon}
-                        disabled
+                        onClick={() => handleClick('all')}
                     >
                         All
                     </Button>
@@ -93,7 +117,7 @@ export default function DependenciesCard({ deps, packageVersion }) {
                         variant='secondary'
                         className='w-1/4'
                         icon={DownloadIcon}
-                        disabled
+                        onClick={() => handleClick('direct')}
                     >
                         Direct
                     </Button>
@@ -101,7 +125,7 @@ export default function DependenciesCard({ deps, packageVersion }) {
                         variant='secondary'
                         className='w-1/4 border-0'
                         icon={DownloadIcon}
-                        disabled
+                        onClick={() => handleClick('indirect')}
                     >
                         Indirect
                     </Button>
@@ -109,7 +133,7 @@ export default function DependenciesCard({ deps, packageVersion }) {
                         variant='secondary'
                         className='w-1/4 border-0'
                         icon={DownloadIcon}
-                        disabled
+                        onClick={() => handleClick('dev')}
                     >
                         Dev
                     </Button>

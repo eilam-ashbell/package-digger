@@ -138,6 +138,8 @@ async function zipDir(dirPath: string): Promise<string> {
 // Recursively add files to the zip object
 function addFilesToZip(zip, folderPath: string, relativePath: string): void {
     try {
+        // exclude /zips folder from compressing
+        if (folderPath.includes('/zips')) return;
         const files = fs.readdirSync(folderPath);
         for (let file of files) {
             const filePath = path.join(folderPath, file);
@@ -148,6 +150,7 @@ function addFilesToZip(zip, folderPath: string, relativePath: string): void {
                 addFilesToZip(zip, filePath, entryPath);
             } else {
                 const fileData = fs.readFileSync(filePath);
+                // add file to the compression
                 zip.file(entryPath, fileData);
             }
         }
