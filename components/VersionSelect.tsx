@@ -4,8 +4,6 @@ import { SelectBox, SelectBoxItem } from '@tremor/react';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
-import { Interface } from 'readline';
-
 
 export default function VersionSelect(versions: Pick<PackageFullModel, 'versions'>) {
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BarList, Card, Title, Bold, Flex, Text } from '@tremor/react';
+import { BarList } from '@tremor/react';
 import SectionTitle from './SectionTitle';
 
 interface ILanguages {

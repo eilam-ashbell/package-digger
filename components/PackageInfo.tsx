@@ -1,4 +1,4 @@
-import { Badge, BadgeDelta, Card, Subtitle, Title } from '@tremor/react';
+import { Badge, Subtitle } from '@tremor/react';
 import * as React from 'react';
 
 interface IPackageInfo {
@@ -12,9 +12,9 @@ export default function PackageInfo(info: IPackageInfo) {
     return (
         <>
             <div className='flex flex-col gap-y-1'>
-                <Title className='text-4xl'>
+                <p className='text-4xl'>
                     {info.name}
-                </Title>
+                </p>
 
             </div>
             <Subtitle className=''>

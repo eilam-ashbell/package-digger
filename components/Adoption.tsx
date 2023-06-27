@@ -1,9 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import {
-    Title,
     AreaChart,
-    Button,
     BarChart,
     Tab,
     TabList,
@@ -12,7 +10,6 @@ import PackageFullModel from '@/models/package-full-model';
 import abbreviate from 'number-abbreviate';
 import { DownloadsDateSelector } from './DownloadsDateSelector';
 import convert from '@/utils/convert';
-import npm from '@/utils/npm';
 import { ITimeRange } from '@/models/npm/ITimeRange';
 import axios from 'axios';
 import dayjs from 'dayjs';

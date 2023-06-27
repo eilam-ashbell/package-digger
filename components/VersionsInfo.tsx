@@ -1,4 +1,4 @@
-import { Bold, Text } from '@tremor/react';
+import { Bold } from '@tremor/react';
 import * as React from 'react';
 import VersionSelect from './VersionSelect';
 import PackageFullModel from '@/models/package-full-model';
@@ -11,36 +11,36 @@ export default function VersionsInfo(packageInfo: PackageFullModel) {
         <>
             <VersionSelect versions={packageInfo.versions} />
             <div className='flex flex-col gap-y-2 divide-y' >
-                <Text className='flex flex row justify-between pt-2'>
+                <p className='flex flex row justify-between pt-2'>
                     <Bold className='text-slate-400'>
                         {`Current: `}
                     </Bold>
                     {packageInfo.versions?.current}
-                </Text>
-                <Text className='flex flex row justify-between  pt-2'>
+                </p>
+                <p className='flex flex row justify-between  pt-2'>
                     <Bold className='text-slate-400'>
                         {`Versions count: `}
                     </Bold>
                     {packageInfo.versions?.count}
-                </Text>
-                <Text className='flex flex row justify-between pt-2'>
+                </p>
+                <p className='flex flex row justify-between pt-2'>
                     <Bold className='text-slate-400'>
                         {`Created: `}
                     </Bold>
                     {dayjs(new Date(packageInfo.metadata?.package.created)).fromNow()}
-                </Text>
-                <Text className='flex flex row justify-between pt-2'>
+                </p>
+                <p className='flex flex row justify-between pt-2'>
                     <Bold className='text-slate-400'>
                         {`Last publish: `}
                     </Bold>
                     {dayjs(new Date(packageInfo.versions?.tags[packageInfo.versions?.tags.findIndex( v => v.tag === packageInfo.versions.current)].publishedAt)).fromNow()}
-                </Text>
-                <Text className='flex flex row justify-between pt-2'>
+                </p>
+                <p className='flex flex row justify-between pt-2'>
                     <Bold className='text-slate-400'>
                         {`Last modified: `}
                     </Bold>
                     {dayjs(new Date(packageInfo.metadata?.package.lastModified)).fromNow()}
-                </Text>
+                </p>
             </div>
         </>
     )
