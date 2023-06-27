@@ -22,22 +22,24 @@ import OsvVulnerabilityModel from '@/models/osv/vulnerability-model';
 export default async function page({ params }) {
     dayjs.extend(relativeTime);
     const { packageName, packageVersion } = params;
-    const online = 0;
-
+    let packageInfo
+    let versionInfo
+    const online = 1;
     if (online) {
-        const packageInfo = (
+        packageInfo = (
             await axios.get<PackageFullModel>(
                 `http://localhost:3000/API/v1/package/${packageName}`,
             )
         ).data;
-        const versionInfo = (
+        versionInfo = (
             await axios.get<VersionFullModel>(
                 `http://localhost:3000/API/v1/package/${packageName}/${packageVersion}`,
             )
         ).data;
+    } else {
+         packageInfo = packageInfoJson;
+         versionInfo = versionInfoJson;
     }
-    const packageInfo = packageInfoJson;
-    const versionInfo = versionInfoJson;
 
     const keyData = [
         {

@@ -30,8 +30,14 @@ export default function PackageIntro({
         <div>
             <div>
                 <div className='text-sm text-gray-400 mb-1'>
-                    {`current ${currentVersion} • Published 
+                    <p>
+                        {`current `}
+                        <Link href={`/npm/${packageName}/${currentVersion}`}>
+                            {currentVersion}
+                        </Link>
+                        {` • Published 
                             ${dayjs(publishedTime).fromNow()}`}
+                    </p>
                 </div>
                 <div className='flex flex-row justify-between  mb-4'>
                     <div className='flex items-baseline'>
