@@ -4,6 +4,7 @@ import UserModel from '@/models/git/user-model';
 import axios from 'axios';
 import { env } from 'process';
 import convert from './convert';
+import ContributorsModel from '@/models/git/contributors-model';
 
 const git = axios.create({
     baseURL: 'https://api.github.com/',
@@ -72,13 +73,19 @@ async function getContributors(
     max: number = 5,
     per_page: number = 100,
     page: number = 1,
-): Promise<UserModel[]> {
+): Promise<ContributorsModel> {
     try {
-        const query = {
+        const firstQuery = {
             per_page: per_page > max ? max : per_page,
             page: page,
         };
-        const { data } = await git.get<UserModel[]>(apiUrl, { params: query });
+        const firsPageRes = await git.get<UserModel[]>(apiUrl, {
+            params: firstQuery,
+        });
+
+        const linkHeader = firsPageRes.headers['link'];
+        const contributorsCount = await countContributors(linkHeader);
+        const { data } = firsPageRes;
         while (data.length < max) {
             const res = await git.get<UserModel[]>(apiUrl, {
                 params: { per_page: per_page, page: page + 1 },
@@ -87,7 +94,10 @@ async function getContributors(
             data.push(...res.data);
             if (dataLength === data.length) break;
         }
-        return data.slice(0, max);
+        return {
+            contributorsCount: contributorsCount,
+            fetchedContributors: data.slice(0, max),
+        };
     } catch (err) {
         console.log(err);
     }
@@ -103,6 +113,72 @@ async function getContributorsInfo(users: UserModel[]) {
         return usersInfo;
     } catch (err) {
         console.log(err);
+    }
+}
+
+interface LinkHeader {
+    [key: string]: string;
+}
+
+function extractLinksFromHeader(linkHeader: string): LinkHeader {
+    try {
+
+        if (!linkHeader) {
+            throw new Error('Link header not found in the response');
+        }
+        const links: LinkHeader = {};
+        const linkRegex: RegExp = /<([^>]+)>;\s*rel="([^"]+)"/g;
+        let match: RegExpExecArray | null;
+        while ((match = linkRegex.exec(linkHeader)) !== null) {
+            const [, link, rel] = match;
+            links[rel] = link;
+        }
+        return links;
+    } catch (err) {
+        console.log(err);
+        
+    }
+}
+
+function extractLastPageFromUrl(url: string): number {
+    const urlObject = new URL(url);
+    const pageParam = urlObject.searchParams.get('page');
+    if (pageParam) {
+        return parseInt(pageParam, 10);
+    }
+
+    throw new Error('Page query value not found in the URL');
+}
+
+function extractPerPageFromUrl(url: string): number {
+    const urlObject = new URL(url);
+    const pageParam = urlObject.searchParams.get('per_page');
+    if (pageParam) {
+        return parseInt(pageParam, 10);
+    }
+
+    throw new Error('Page query value not found in the URL');
+}
+
+async function countContributors(linkHeader) {
+    try{
+
+        const links = linkHeader ? extractLinksFromHeader(linkHeader) : null;
+        const lastPageNumber = extractLastPageFromUrl(links['last']);
+        const lastPageQuery = {
+            per_page: extractPerPageFromUrl(links['last']),
+            page: lastPageNumber,
+        };
+        const lastPageRes = await git.get<UserModel[]>(links['last'], {
+            params: lastPageQuery,
+        });
+        const lasPageCount = lastPageRes.data.length;
+        const totalContributorsCount =
+        lastPageQuery.per_page * (lastPageNumber - 1) + lasPageCount;
+        return totalContributorsCount;
+    } catch (err) {
+        console.log(err);
+        
     }
 }
 

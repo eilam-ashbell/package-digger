@@ -27,16 +27,17 @@ export async function GET(
     const gitRepoInfo = await git.getRepo(owner, repo);
     const gitRepoUser = await git.getUser(gitRepoInfo.owner.login);
     const gitRepoLanguages = await git.getLanguages(gitRepoInfo.git_url);
+    // ! todo -> add contributors count to data
     const gitRepoContributors = await git.getContributors(
         gitRepoInfo.contributors_url,
         4,
     );
     const gitRepoContributorsInfo = await git.getContributorsInfo(
-        gitRepoContributors,
+        gitRepoContributors.fetchedContributors,
     );
     const gitRepoContributorsInfoUnit = gitRepoContributorsInfo.map((c, i) => ({
         ...c,
-        contributions: gitRepoContributors[i].contributions,
+        contributions: gitRepoContributors.fetchedContributors[i].contributions,
     }));
 
     // Get package dependencies from DepsDev
