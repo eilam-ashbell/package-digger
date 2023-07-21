@@ -3,7 +3,7 @@ import DepsModel from "@/models/united/deps-model";
 import depsDev from "./depsDev";
 import npm from "./npm";
 import VersionModel from "@/models/npm/version-model";
-import git from "./git";
+import git from "./githubService";
 import AdoptionModel from "@/models/united/adoption-model";
 import convert from "./convert";
 import VersionInfoModel from "@/models/united/version-info-model";

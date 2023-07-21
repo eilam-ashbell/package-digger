@@ -24,12 +24,14 @@
         "eslint": "8.41.0",
         "eslint-config-next": "13.4.3",
         "js-file-download": "^0.4.12",
+        "jsdom": "^22.1.0",
         "mongoose": "^7.2.0",
         "next": "13.4.3",
         "next-connect": "^1.0.0",
         "node-zip": "^1.1.1",
         "nprogress": "^0.2.0",
         "number-abbreviate": "^2.0.0",
+        "packageurl-js": "^1.0.2",
         "postcss": "8.4.23",
         "react": "18.2.0",
         "react-dom": "18.2.0",
@@ -41,5 +43,8 @@
         "tailwindcss": "3.3.2",
         "typescript": "5.0.4",
         "vuln-vects": "^1.1.0"
+    },
+    "devDependencies": {
+        "@types/jsdom": "^21.1.1"
     }
 }

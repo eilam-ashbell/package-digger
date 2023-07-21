@@ -24,7 +24,7 @@ export default async function page({ params }) {
     const { packageName, packageVersion } = params;
     let packageInfo
     let versionInfo
-    const online = 1;
+    const online = 0;
     if (online) {
         packageInfo = (
             await axios.get<PackageFullModel>(

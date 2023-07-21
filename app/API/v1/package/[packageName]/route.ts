@@ -2,7 +2,7 @@ import PackageInfo from '@/components/PackageInfo';
 import PackageFullModel from '@/models/package-full-model';
 import convert from '@/utils/convert';
 import depsDev from '@/utils/depsDev';
-import git from '@/utils/git';
+import git from '@/utils/githubService';
 import npm from '@/utils/npm';
 import osv from '@/utils/osv';
 import dayjs from 'dayjs';
@@ -16,7 +16,7 @@ export async function GET(
 ) {
     const packageName = convert.url(params.packageName);
     const data = new PackageFullModel();
-
+    // git.getTrendingGitRepos(['javascript', 'typescript'], 'monthly')
     // Get package info from npm
     const npmPackageInfo = await npm.getPackageInfo(packageName, false);
 
@@ -25,12 +25,16 @@ export async function GET(
         npmPackageInfo.repository.url,
     );
     const gitRepoInfo = await git.getRepo(owner, repo);
+    const test = git.constructPurl(owner, repo, '13.0.5')
+    console.log(test);
+    
     const gitRepoUser = await git.getUser(gitRepoInfo.owner.login);
-    const gitRepoLanguages = await git.getLanguages(gitRepoInfo.git_url);
+    const gitRepoLanguages = await git.getLanguages(owner, repo);
     // ! todo -> add contributors count to data
     const gitRepoContributors = await git.getContributors(
-        gitRepoInfo.contributors_url,
-        4,
+        owner, repo, {
+            max: 4,
+        }
     );
     const gitRepoContributorsInfo = await git.getContributorsInfo(
         gitRepoContributors.fetchedContributors,

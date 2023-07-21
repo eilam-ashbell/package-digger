@@ -10,6 +10,8 @@ export const checks = {
     isFullyOpenSource: '',
     isThereDocumentation: '',
 
+    ownerType: '', // check if the owner is organization or user
+    isRepoArchived: '', // check if the git repo is archived or not
     contributors: {
         numberOfContributors: '', //There are more than 20 contributors to the repo
         // More than 50% of contributors authored more than 1 commit
@@ -24,6 +26,9 @@ export const checks = {
         numberOfStars: '', //More than 1000 stars
         numberOfForks: '', //More than 100 forks
         numberOpenIssues: '', //Less than 50 open issues
+        numberClosedIssues: '', //Less than 50 open issues
+        lastIssuePublication: '', //when the last issue created
+        averageClosingDuration: '', // average time of closing an issue
         numberOfDependents: '',
         numberOfPullRequests: '',
         isRepoTopStared: '', //is repo is in top 10,000 by stars //No. 104 by stars on GitHub
