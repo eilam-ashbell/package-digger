@@ -2,6 +2,6 @@
 export default class PackageTimeModel {
     "modified": string;
     "created": string;
-    // ! todo - type records for every version
-    // "1.0.0": string;
 }
+
+export type FullPackageTimeModel = PackageTimeModel & Record<string, string>

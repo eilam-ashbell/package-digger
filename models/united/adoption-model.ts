@@ -1,5 +1,5 @@
 import StargazerModel from "../git/stargezer-model";
-import PackageDownloadModel from "../npm/package-download-model";
+import PackageDownloadModel from "../npm/npm-package-download-model";
 
 export default class AdoptionModel {
     stars: number;

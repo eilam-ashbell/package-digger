@@ -1,7 +1,7 @@
 import DistTagsModel from "./dist-tags-model";
-import PackageTimeModel from "./package-time-model";
-import PersonModel from "./person-model";
-import VersionModel from "./version-model";
+import PackageTimeModel, { FullPackageTimeModel } from "./package-time-model";
+import PersonModel from "./npm-person-model";
+import VersionModel from "./npm-overview-version-model";
 
 export default class PackageInfoModel {
     "_id": string;
@@ -12,7 +12,7 @@ export default class PackageInfoModel {
     "versions": Record<string, VersionModel>;
     "readme": string;
     "maintainers": PersonModel[];
-    "time": PackageTimeModel;
+    "time": FullPackageTimeModel;
     "author": PersonModel;
     "repository": Record<string, string>;
     "users": Record<string, boolean>;

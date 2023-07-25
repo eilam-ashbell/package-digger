@@ -2,7 +2,7 @@ import { PackageName } from "@/models/npm/package-name-model";
 import DepsModel from "@/models/united/deps-model";
 import depsDev from "./depsDev";
 import npm from "./npm";
-import VersionModel from "@/models/npm/version-model";
+import VersionModel from "@/models/npm/npm-overview-version-model";
 import git from "./githubService";
 import AdoptionModel from "@/models/united/adoption-model";
 import convert from "./convert";

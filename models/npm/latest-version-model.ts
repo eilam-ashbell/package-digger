@@ -1,5 +1,5 @@
 import DistModel from "./dist-model";
-import PersonModel from "./person-model";
+import PersonModel from "./npm-person-model";
 
 export default class LatestVersionModel {
     "name": string;

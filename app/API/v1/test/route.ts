@@ -1,13 +1,8 @@
-import githubAggregation from '@/utils/githubAggregation';
-import githubService from '@/utils/githubService';
-import axios from 'axios';
+import npmAggregation from '@/utils/npmAggregation';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
     
-    const owner = request.nextUrl.searchParams.get('owner');
-    const repo = request.nextUrl.searchParams.get('repo');    
-    const data = await githubAggregation.init(owner, repo);
-    // const data = await githubService.getDependentsRepos(owner, repo);
-    return NextResponse.json({...data});
+    const res = await npmAggregation.init('next', '13.4.11')
+    return NextResponse.json({...res});
 }
