@@ -38,5 +38,5 @@ next-env.d.ts
 packageInfo.json
 versionInfo.json
 .prettierrc.js
-
-temp
+/.vscode
+/temp
